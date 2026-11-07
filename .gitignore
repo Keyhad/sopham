@@ -79,6 +79,8 @@ web_modules/
 out
 public/branding/
 public/design-spec.md
+public/backend.md
+.wrangler/
 
 # Nuxt.js build / generate output
 .nuxt
@@ -149,3 +151,19 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Tempfiles
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+tmp/
+temp/
+
+# Oracles
+*.ora
+.ora/
+
+# One
+.one/

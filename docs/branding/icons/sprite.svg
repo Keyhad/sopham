@@ -10,5 +10,10 @@
     <symbol id="food" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-size="48">🍎</text></symbol>
     <symbol id="package" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-size="48">📦</text></symbol>
     <symbol id="battery" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-size="48">🔋</text></symbol>
+    <symbol id="paper" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"><path d="M13 7h27l12 12v38H13z"/><path d="M40 7v12h12M22 29h21M22 38h21M22 47h14"/></g></symbol>
+    <symbol id="plastic" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"><path d="M25 5h14v9H25zM25 14v7l-7 8v24q0 5 5 5h18q5 0 5-5V29l-7-8v-7M19 34h26M19 47h26"/><path d="M27 38h10v5H27z"/></g></symbol>
+    <symbol id="glass" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"><path d="M27 5h10v17l8 10v23q0 4-4 4H23q-4 0-4-4V32l8-10zM27 12h10M20 37h24M20 49h24"/></g></symbol>
+    <symbol id="metal" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"><ellipse cx="32" cy="12" rx="17" ry="7"/><path d="M15 12v40c0 9 34 9 34 0V12M16 23c8 5 24 5 32 0M16 45c8 5 24 5 32 0M28 9h8"/></g></symbol>
+    <symbol id="waste" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"><path d="M18 18h28l-3 39H21zM14 12h36v6H14zM26 6h12v6H26zM28 27v21M36 27v21"/><circle cx="24" cy="59" r="2"/><circle cx="40" cy="59" r="2"/></g></symbol>
   </defs>
 </svg>

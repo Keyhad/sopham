@@ -1,6 +1,6 @@
 # Sopham
 
-Svensk, statisk Next.js-app för sophämtning för villor och radhus i Stockholms stad. Ingen inloggning, analys eller lokal lagring.
+Svensk, statisk Next.js-app för sophämtning för villor och radhus i Stockholms stad. Ingen inloggning eller analys. Adress och senaste resultat kan valfritt sparas på den egna enheten.
 
 ## Utveckling
 
@@ -40,14 +40,34 @@ GitHub Pages publicerar även brandingkatalogen och designspecifikationen. Autom
 
 ## Data och begränsningar
 
-Efter uttryckligt samtycke skickas adressen direkt från webbläsaren till Stockholm Vatten och Avfalls publika söktjänst:
+Adressökningen är avstängd som standard. SVOA:s CORS-header blockerar direktåtkomst från GitHub Pages. Den publika sidan laddar sina datum med JavaScript från samma sökendpoint; HTML-scraping ger inga datum utan denna förfrågan.
+
+En valfri [Cloudflare Worker](worker/index.ts) kan efter godkännande vidarebefordra sökningen server-side. Efter uttryckligt samtycke skickas adressen som JSON i en POST till backendens `/pickups`, som frågar Stockholm Vatten och Avfalls publika söktjänst:
 `https://www.stockholmvattenochavfall.se/villa-och-radhus/avfallstjanster/nar-kommer-sopbilen/Search?address=…`.
 
-Detta är en odokumenterad tjänst, inte ett verifierat öppet API med garanterad tillgänglighet eller återanvändningslicens. Liveåtkomst och CORS kunde inte verifieras i utvecklingsmiljön. Kontrollera dessa och datavillkoren med SVOA före publicering. Appen visar felmeddelande och länk till officiell sökning vid nätverksfel, blockerad CORS eller oväntade data. Den använder inte proxy, API-nycklar eller påhittade hämtningsdatum.
+Detta är en odokumenterad tjänst, inte ett verifierat öppet API med garanterad tillgänglighet eller återanvändningslicens. Bekräfta tillstånd och datavillkor med SVOA innan backendåtkomst aktiveras. En av användaren godkänd adress har verifierats i ett separat lokalt server-side-test; automatiserade tester använder syntetiska data. Backend validerar datakällans format och returnerar fel vid ändrat format, nätverksfel eller oväntade data. Appen visar felmeddelande och länk till officiell sökning. Inga publika CORS-proxyer eller påhittade datum används.
 
 Endast nästa datum per kärl visas. Kalenderfiler innehåller enstaka heldagshändelser och en påminnelse kvällen före, inte uppskattade återkommande scheman. Kalendern synkroniseras inte. Användaren kan lägga in ett eget kontrollerat datum, tydligt märkt som ej verifierat. Flerbostadshus hänvisas till fastighetsägaren; andra kommuner stöds inte ännu.
 
-Frivillig geolokalisering gör endast en ungefärlig lokal områdeskontroll; den hittar inte gatuadressen och skickar inte koordinater vidare. Alla uppgifter rensas vid omladdning eller återkallat samtycke. Kalenderfiler och redan skickade förfrågningar kan inte återkallas.
+Frivillig geolokalisering gör endast en ungefärlig lokal områdeskontroll; den hittar inte gatuadressen och skickar inte koordinater vidare. Utan ”Kom ihåg” rensas uppgifter vid omladdning. Återkallat samtycke rensar både sidans minne och eventuell sparad adress och stoppar vidare sökning i fliken. Kalenderfiler och redan skickade förfrågningar kan inte återkallas.
+
+## Nästa hämtning först och valfri sparad adress
+
+Första vyn visar nästa bekräftade datum med stora **IDAG**, **IMORGON** eller **OM N DAGAR** och tydliga, textmärkta materialbilder. Alla kärl med samma nästa datum visas tillsammans; andra datum finns i den fullständiga listan. Datum beräknas utifrån Stockholms kalenderdygn, inte användarens lokala tidszon eller uppskattad återkommande frekvens.
+
+Med **Kom ihåg på den här enheten** sparas adress, samtycke, senaste officiella resultat och kontrolltid i `localStorage` efter sökning. Vid återbesök, återgång till fliken och nytt dygn i en öppen sida uppdateras uppgifterna automatiskt. Adressen skickas bara till den backend och driftmiljö som användaren samtyckt till; ändrad konfiguration kräver nytt samtycke.
+
+Sparade uppgifter visas som **INTE UPPDATERAT** tills en ny sökning lyckas. Vid fel kvarstår varningen och senaste kontrolltid, även i kalenderexportens beskrivning. Passerade datum visas inte som kommande; inga datum gissas. **Glöm adressen**, avmarkering av minnesvalet eller återkallat samtycke tar bort sparade uppgifter. Demodata, position och egna datum sparas inte. Lagringsfel visas uttryckligen. Använd inte minnesfunktionen på en delad webbläsarprofil.
+
+## Valfri backend på Cloudflare
+
+Se [backendens driftsinstruktioner](docs/backend.md). GitHub Pages fortsätter att publicera frontend; Worker deployas separat och är spärrad med `SVOA_ACCESS_APPROVED=false`. Utan `NEXT_PUBLIC_PICKUP_WORKER_URL` visas officiell sökning och manuella datum utan misslyckade direktförfrågningar.
+
+## Demo utan liveåtkomst
+
+Öppna `https://keyhad.github.io/sopham/?demo=settings` (lokalt `http://localhost:3000/?demo=settings`) och välj **Aktivera demo med syntetiska exempeldata**. Skriv en påhittad adress och bekräfta demoläget för att visa simulerad laddning, två exempelresultat och kalenderexport. Ingen adress skickas vidare; platsknappen simulerar också resultat utan platsåtkomst.
+
+Inställningspanelen syns bara med URL-parametern, men är inte ett säkerhetsskydd. Demoläget är tydligt märkt i sidan, resultat och kalenderfilen `sopham-demo.ics`. Alla adresser får samma relativa exempeldatum; inga verkliga scheman antyds. Läget sparas inte och startar avstängt efter omladdning. Byte av läge rensar uppgifter och avbryter pågående sökning. Det aktiverar inte Worker eller kringgår tillståndsspärren.
 
 ## Före publik drift
 

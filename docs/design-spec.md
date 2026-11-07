@@ -35,7 +35,7 @@ Symboler och emoji behåller befintliga motiv. Emoji och SVG-text använder syst
 ## Layout och responsivitet
 
 1. Sidhuvud med logotyp, huvudnavigation och tangentbordsåtkomlig hopplänk.
-2. Hero med budskap, primär handling och dekorativ illustration.
+2. Nästa hämtning först, med mycket stora IDAG/IMORGON/OM N DAGAR, exakt datum och textmärkta materialbilder. IDAG är större än IMORGON. Alla kärl på samma nästa datum grupperas. För nya användare följer en introduktion med illustration.
 3. Tre steg som förklarar arbetsflödet.
 4. Planering med adress/samtycke till vänster och resultat/manuellt datum till höger.
 5. Tre sorteringskort.
@@ -51,8 +51,12 @@ Symboler och emoji behåller befintliga motiv. Emoji och SVG-text använder syst
 - Behåll tangentbordsnavigation, inaktiva knappar och `prefers-reduced-motion`.
 - Verifiera WCAG AA-kontrast efter palettändringar: minst 4,5:1 för normal text och 3:1 för stor text och relevanta kontur-/fokuselement.
 - Adressökning kräver uttryckligt samtycke. Återkallande avbryter sökning och ogiltigförklarar platsåterkoppling.
-- Platskontroll är frivillig och lokal. Inget konto, spårning eller lokal lagring införs av brandingkatalogen.
+- Adressökning är avstängd utan konfigurerad backend. När den aktiveras beskriver samtycket behandling hos Cloudflare och vidarebefordran till SVOA. Backend kräver separat SVOA-tillstånd; se [driftsinstruktioner](backend.md).
+- Platskontroll är frivillig och lokal. Inget konto eller spårning införs. Brandingkatalogen använder ingen lokal lagring.
+- Appens minnesval är separat och frivilligt. Det sparar adress, samtycke, senaste officiella resultat och kontrolltid på enheten; återbesök och nytt dygn uppdaterar automatiskt till samma backend. Glöm/återkalla rensar lagringen. Sparade resultat märks INTE UPPDATERAT tills en ny sökning lyckas; äldre datum ersätts aldrig med gissningar.
+- Materialnamn och matchningsord finns i [icons/materials.json](branding/icons/materials.json); SVG-formerna finns i spriten. Färg är aldrig den enda ledtråden: varje stor ikon har en tydlig textetikett. Okända kärlgrupper behåller datakällans namn.
 - Egna datum är tydligt ej verifierade; kalenderexporten är en ögonblicksbild.
+- Dolda demoinställningar öppnas med `?demo=settings`, men demoläget är synligt märkt och använder endast syntetiska datum. Ingen adress skickas vidare eller platsåtkomst begärs i demo. Resultat och kalenderexport märks DEMO; lägesbyte rensar uppgifter och läget återställs efter omladdning.
 
 ## Anpassning och kontroll
 

@@ -17,4 +17,7 @@
   --heading-size: clamp(40px, 5vw, 62px);
   --heading-line-height: 1.12;
   --heading-tracking: -2.8px;
+  --pickup-day-size: clamp(44px, 9vw, 96px);
+  --pickup-today-size: clamp(96px, 16vw, 144px);
+  --material-icon-size: 96px;
 }

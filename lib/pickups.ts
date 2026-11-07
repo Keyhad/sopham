@@ -9,6 +9,10 @@ export type Pickup = {
   frequency: string;
 };
 
+export function lookupAvailable(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_PICKUP_WORKER_URL);
+}
+
 export function validDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(`${value}T12:00:00Z`);
@@ -42,16 +46,26 @@ export function parsePickups(data: unknown): Pickup[] {
 }
 
 export async function fetchPickups(address: string, signal: AbortSignal): Promise<Pickup[]> {
-  const url = new URL(`${OFFICIAL_URL}/Search`);
-  url.searchParams.set("address", address);
+  const endpoint = process.env.NEXT_PUBLIC_PICKUP_WORKER_URL;
+  if (!endpoint) throw new Error("Adressökningen är avstängd i väntan på tillstånd från SVOA.");
+  const sameOrigin = endpoint.startsWith("/") && !endpoint.startsWith("//");
+  const url = new URL(endpoint, typeof window === "undefined" ? "http://localhost" : window.location.origin);
+  if (url.protocol !== "https:" && !(url.protocol === "http:" && (sameOrigin || ["localhost", "127.0.0.1"].includes(url.hostname)))) {
+    throw new Error("Adressökningen kräver en säker backendadress.");
+  }
   const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ address }),
     signal,
     credentials: "omit",
     referrerPolicy: "no-referrer",
     cache: "no-store",
   });
   if (!response.ok) throw new Error("Datakällan svarade inte.");
-  return parsePickups(await response.json());
+  const rows: unknown = await response.json();
+  if (!Array.isArray(rows)) throw new Error("Oväntat svar från datakällan.");
+  return parsePickups(rows);
 }
 
 function escapeCalendar(value: string): string {
@@ -77,6 +91,11 @@ function foldLine(line: string): string {
   return chunks.join("\r\n");
 }
 
+function calendarId(): string {
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  return Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
 export function createCalendar(pickups: Pickup[], source: string): string {
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", `PRODID:${escapeCalendar(brand.calendarProductId)}`,
@@ -85,7 +104,7 @@ export function createCalendar(pickups: Pickup[], source: string): string {
     if (!validDate(pickup.date)) throw new Error("Ogiltigt kalenderdatum.");
     const end = new Date(`${pickup.date}T12:00:00Z`);
     end.setUTCDate(end.getUTCDate() + 1);
-    lines.push("BEGIN:VEVENT", `UID:${crypto.randomUUID()}@${brand.calendarUidDomain}`,
+    lines.push("BEGIN:VEVENT", `UID:${calendarId()}@${brand.calendarUidDomain}`,
       `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${pickup.date.replaceAll("-", "")}`,
       `DTEND;VALUE=DATE:${end.toISOString().slice(0, 10).replaceAll("-", "")}`,
       `SUMMARY:${escapeCalendar(`Sophämtning: ${pickup.group}`)}`,

@@ -1,0 +1,19 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "sopham-pickups",
+  "main": "index.ts",
+  "compatibility_date": "2026-11-07",
+  "workers_dev": true,
+  "vars": {
+    "ALLOWED_ORIGIN": "https://keyhad.github.io",
+    "SVOA_ACCESS_APPROVED": "false"
+  },
+  "ratelimits": [
+    {
+      "name": "RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 }
+    }
+  ],
+  "observability": { "enabled": false }
+}

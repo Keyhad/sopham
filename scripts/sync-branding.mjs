@@ -11,6 +11,7 @@ await rm(target, { recursive: true, force: true });
 await mkdir(target, { recursive: true });
 await cp(source, target, { recursive: true });
 await cp(new URL("../docs/design-spec.md", import.meta.url), new URL("../public/design-spec.md", import.meta.url));
+await cp(new URL("../docs/backend.md", import.meta.url), new URL("../public/backend.md", import.meta.url));
 
 async function resolveSvgColors(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {

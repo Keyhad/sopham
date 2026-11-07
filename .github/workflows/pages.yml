@@ -26,10 +26,12 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
+      - run: npm run worker:check
       - name: Build static site
         run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: /sopham
+          NEXT_PUBLIC_PICKUP_WORKER_URL: ${{ vars.NEXT_PUBLIC_PICKUP_WORKER_URL }}
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         with:

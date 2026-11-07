@@ -1,0 +1,9 @@
+{
+  "paper": { "label": "Papper", "terms": ["papper", "kartong"] },
+  "plastic": { "label": "Plast", "terms": ["plast"] },
+  "glass": { "label": "Glas", "terms": ["glas", "flask"] },
+  "metal": { "label": "Metall", "terms": ["metall", "burk"] },
+  "waste": { "label": "Restavfall", "terms": ["restavfall", "brännbart"] },
+  "food": { "label": "Matavfall", "terms": ["matavfall", "organiskt"] },
+  "package": { "label": "Förpackningar", "terms": ["förpackning"] }
+}
