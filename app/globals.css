@@ -98,7 +98,7 @@ footer p, footer > span { font-size: 12px; color: var(--muted); margin: 0; }
   nav { gap: 20px; flex-wrap: wrap; }
   .hero { grid-template-columns: 1fr; padding-top: 40px; }
   h1 { letter-spacing: -1.8px; }.illustration { max-width: 380px; width: 100%; margin: 8px auto 0; height: 320px; }
-  .bin-green { left: 70px; }.bin-brown { left: 195px; }
+  .bin-green { left: 15%; }.bin-brown { left: 55%; }
   .steps { align-items: flex-start; gap: 14px; font-size: 12px; }.steps span { flex: 1; }.steps b { display: block; width: fit-content; margin-bottom: 10px; }
   .planner-grid, .sorting-grid { grid-template-columns: 1fr; }
   .section { padding-top: 45px; }h2 { font-size: 30px; }

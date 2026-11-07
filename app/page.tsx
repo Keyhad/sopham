@@ -39,7 +39,7 @@ export default function Home() {
         : "Inga hämtningsdagar hittades. Kontrollera fullständig adress med postort. För flerbostadshus: fråga fastighetsägaren.");
     } catch {
       if (request.current !== controller) return;
-      setStatus("Vi kunde inte läsa hämtningsdata. Tjänsten kan vara otillgänglig eller blockera webbläsaråtkomst. Öppna den officiella söksidan nedan och lägg in datumet själv.");
+      setStatus("Vi kunde inte läsa hämtningsdata. Tjänsten kan vara otillgänglig eller blockera webbläsaråtkomst. Öppna länken till den officiella söksidan och lägg in datumet själv.");
     } finally {
       clearTimeout(timeout);
       if (request.current === controller) setBusy(false);
@@ -131,7 +131,7 @@ export default function Home() {
             <div className="card">
               <h3>Hitta din hämtning</h3>
               <p>Uppgifterna hämtas från Stockholm Vatten och Avfalls publika adressökning. Åtkomsten är inte garanterad.</p>
-              <button className="secondary" type="button" onClick={locate}>⌖ Använd min ungefärliga plats (frivilligt)</button>
+              <button className="secondary" type="button" onClick={locate}>Använd min ungefärliga plats (frivilligt)</button>
               <p className="small">När du trycker godkänner du att webbläsaren använder din plats för en ungefärlig områdeskontroll, inte för att hitta din adress. Koordinater sparas inte eller skickas till oss.</p>
               <p role="status" className="small">{location}</p>
               <form onSubmit={search}>
