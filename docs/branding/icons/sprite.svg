@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="recycle" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="54" fill="currentColor">♻</text></symbol>
+    <symbol id="sun" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="54" fill="currentColor">☀</text></symbol>
+    <symbol id="spark" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="54" fill="currentColor">✦</text></symbol>
+    <symbol id="heart" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="54" fill="currentColor">♡</text></symbol>
+    <symbol id="arrow-up-right" viewBox="0 0 64 64"><path d="M16 48 48 16M18 16h30v30" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="arrow-right" viewBox="0 0 64 64"><path d="M12 32h40M34 14l18 18-18 18" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="download" viewBox="0 0 64 64"><path d="M32 10v36M16 30l16 16 16-16M12 54h40" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="food" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-size="48">🍎</text></symbol>
+    <symbol id="package" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-size="48">📦</text></symbol>
+    <symbol id="battery" viewBox="0 0 64 64"><text x="32" y="51" text-anchor="middle" font-size="48">🔋</text></symbol>
+  </defs>
+</svg>

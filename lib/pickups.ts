@@ -1,3 +1,5 @@
+import brand from "../docs/branding/brand.json" with { type: "json" };
+
 export const OFFICIAL_URL =
   "https://www.stockholmvattenochavfall.se/villa-och-radhus/avfallstjanster/nar-kommer-sopbilen";
 
@@ -77,13 +79,13 @@ function foldLine(line: string): string {
 
 export function createCalendar(pickups: Pickup[], source: string): string {
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Sopham//Sophämtning//SV",
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", `PRODID:${escapeCalendar(brand.calendarProductId)}`,
     "CALSCALE:GREGORIAN", "METHOD:PUBLISH"];
   for (const pickup of pickups) {
     if (!validDate(pickup.date)) throw new Error("Ogiltigt kalenderdatum.");
     const end = new Date(`${pickup.date}T12:00:00Z`);
     end.setUTCDate(end.getUTCDate() + 1);
-    lines.push("BEGIN:VEVENT", `UID:${crypto.randomUUID()}@sopham`,
+    lines.push("BEGIN:VEVENT", `UID:${crypto.randomUUID()}@${brand.calendarUidDomain}`,
       `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${pickup.date.replaceAll("-", "")}`,
       `DTEND;VALUE=DATE:${end.toISOString().slice(0, 10).replaceAll("-", "")}`,
       `SUMMARY:${escapeCalendar(`Sophämtning: ${pickup.group}`)}`,

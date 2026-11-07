@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brandingkatalog</title>
+  <link rel="stylesheet" href="colors/tokens.css">
+  <link rel="stylesheet" href="layout/tokens.css">
+  <link rel="stylesheet" href="layout/application.css">
+  <link rel="stylesheet" href="layout/catalog.css">
+  <script src="catalog.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Hoppa till innehållet</a>
+  <header class="header catalog-header">
+    <span class="brand"><svg class="brand-logo" viewBox="0 0 180 44" role="img" aria-label="Logotyp"><use href="logos/wordmark.svg#wordmark"></use></svg></span>
+    <nav aria-label="Katalog"><a href="#logos">Logotyper</a><a href="#icons">Ikoner</a><a href="#colors">Färger</a><a href="#layout">Layout</a></nav>
+  </header>
+  <main id="main" class="catalog">
+    <h1>Brandingkatalog</h1>
+    <p class="intro">Gemensamma tillgångar och designvariabler för webbplatsen. Ändra källorna här, inte genererade filer i public/branding.</p>
+    <p><a href="brand.json">Varumärkesinställningar (JSON)</a> · <a href="../design-spec.md">Designspecifikation</a></p>
+
+    <section id="logos" class="section">
+      <h2>Logotyper</h2>
+      <div class="catalog-grid">
+        <figure class="card"><svg class="asset-preview" viewBox="0 0 180 44" role="img" aria-label="Ordlogotyp"><use href="logos/wordmark.svg#wordmark"></use></svg><figcaption>Ordlogotyp<a href="logos/wordmark.svg">logos/wordmark.svg</a></figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Webbplatsikon"><use href="icons/favicon.svg#favicon"></use></svg><figcaption>Webbplatsikon<a href="icons/favicon.svg">icons/favicon.svg</a></figcaption></figure>
+      </div>
+    </section>
+
+    <section id="icons" class="section">
+      <h2>Ikoner</h2>
+      <p>Gemensam SVG-sprite. Symboler är dekorativa när text redan förklarar funktionen. Emoji kan se olika ut mellan operativsystem.</p>
+      <div class="catalog-grid">
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Återvinning"><use href="icons/sprite.svg#recycle"></use></svg><figcaption>recycle</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Sol"><use href="icons/sprite.svg#sun"></use></svg><figcaption>sun</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Stjärna"><use href="icons/sprite.svg#spark"></use></svg><figcaption>spark</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Hjärta"><use href="icons/sprite.svg#heart"></use></svg><figcaption>heart</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Extern länk"><use href="icons/sprite.svg#arrow-up-right"></use></svg><figcaption>arrow-up-right</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Nästa"><use href="icons/sprite.svg#arrow-right"></use></svg><figcaption>arrow-right</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Ladda ned"><use href="icons/sprite.svg#download"></use></svg><figcaption>download</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Matavfall"><use href="icons/sprite.svg#food"></use></svg><figcaption>food</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Förpackningar"><use href="icons/sprite.svg#package"></use></svg><figcaption>package</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Batterier"><use href="icons/sprite.svg#battery"></use></svg><figcaption>battery</figcaption></figure>
+      </div>
+      <p class="sorting-link"><a href="icons/sprite.svg">icons/sprite.svg</a></p>
+    </section>
+
+    <section id="colors" class="section">
+      <h2>Färger</h2>
+      <p><a href="colors/tokens.css">colors/tokens.css</a> är palettens enda källa. Förhandsvisningen läser variablernas aktuella värden.</p>
+      <div class="catalog-grid">
+        <figure class="card" data-color="--ink"><span class="swatch" style="--swatch: var(--ink)"></span><figcaption class="token-name">--ink</figcaption></figure>
+        <figure class="card" data-color="--green"><span class="swatch" style="--swatch: var(--green)"></span><figcaption class="token-name">--green</figcaption></figure>
+        <figure class="card" data-color="--paper"><span class="swatch" style="--swatch: var(--paper)"></span><figcaption class="token-name">--paper</figcaption></figure>
+        <figure class="card" data-color="--muted"><span class="swatch" style="--swatch: var(--muted)"></span><figcaption class="token-name">--muted</figcaption></figure>
+        <figure class="card" data-color="--line"><span class="swatch" style="--swatch: var(--line)"></span><figcaption class="token-name">--line</figcaption></figure>
+        <figure class="card" data-color="--surface"><span class="swatch" style="--swatch: var(--surface)"></span><figcaption class="token-name">--surface</figcaption></figure>
+        <figure class="card" data-color="--green-hover"><span class="swatch" style="--swatch: var(--green-hover)"></span><figcaption class="token-name">--green-hover</figcaption></figure>
+        <figure class="card" data-color="--disabled-background"><span class="swatch" style="--swatch: var(--disabled-background)"></span><figcaption class="token-name">--disabled-background</figcaption></figure>
+        <figure class="card" data-color="--disabled-ink"><span class="swatch" style="--swatch: var(--disabled-ink)"></span><figcaption class="token-name">--disabled-ink</figcaption></figure>
+        <figure class="card" data-color="--disabled-border"><span class="swatch" style="--swatch: var(--disabled-border)"></span><figcaption class="token-name">--disabled-border</figcaption></figure>
+        <figure class="card" data-color="--secondary-hover"><span class="swatch" style="--swatch: var(--secondary-hover)"></span><figcaption class="token-name">--secondary-hover</figcaption></figure>
+        <figure class="card" data-color="--focus"><span class="swatch" style="--swatch: var(--focus)"></span><figcaption class="token-name">--focus</figcaption></figure>
+        <figure class="card" data-color="--accent"><span class="swatch" style="--swatch: var(--accent)"></span><figcaption class="token-name">--accent</figcaption></figure>
+        <figure class="card" data-color="--illustration-background"><span class="swatch" style="--swatch: var(--illustration-background)"></span><figcaption class="token-name">--illustration-background</figcaption></figure>
+        <figure class="card" data-color="--sun"><span class="swatch" style="--swatch: var(--sun)"></span><figcaption class="token-name">--sun</figcaption></figure>
+        <figure class="card" data-color="--bin-green"><span class="swatch" style="--swatch: var(--bin-green)"></span><figcaption class="token-name">--bin-green</figcaption></figure>
+        <figure class="card" data-color="--bin-brown"><span class="swatch" style="--swatch: var(--bin-brown)"></span><figcaption class="token-name">--bin-brown</figcaption></figure>
+        <figure class="card" data-color="--bin-green-lid"><span class="swatch" style="--swatch: var(--bin-green-lid)"></span><figcaption class="token-name">--bin-green-lid</figcaption></figure>
+        <figure class="card" data-color="--bin-brown-lid"><span class="swatch" style="--swatch: var(--bin-brown-lid)"></span><figcaption class="token-name">--bin-brown-lid</figcaption></figure>
+        <figure class="card" data-color="--bin-symbol"><span class="swatch" style="--swatch: var(--bin-symbol)"></span><figcaption class="token-name">--bin-symbol</figcaption></figure>
+        <figure class="card" data-color="--wheel"><span class="swatch" style="--swatch: var(--wheel)"></span><figcaption class="token-name">--wheel</figcaption></figure>
+        <figure class="card" data-color="--label-background"><span class="swatch" style="--swatch: var(--label-background)"></span><figcaption class="token-name">--label-background</figcaption></figure>
+        <figure class="card" data-color="--bin-shadow"><span class="swatch" style="--swatch: var(--bin-shadow)"></span><figcaption class="token-name">--bin-shadow</figcaption></figure>
+        <figure class="card" data-color="--label-shadow"><span class="swatch" style="--swatch: var(--label-shadow)"></span><figcaption class="token-name">--label-shadow</figcaption></figure>
+        <figure class="card" data-color="--input-border"><span class="swatch" style="--swatch: var(--input-border)"></span><figcaption class="token-name">--input-border</figcaption></figure>
+        <figure class="card" data-color="--results-background"><span class="swatch" style="--swatch: var(--results-background)"></span><figcaption class="token-name">--results-background</figcaption></figure>
+        <figure class="card" data-color="--tag-background"><span class="swatch" style="--swatch: var(--tag-background)"></span><figcaption class="token-name">--tag-background</figcaption></figure>
+        <figure class="card" data-color="--empty-icon"><span class="swatch" style="--swatch: var(--empty-icon)"></span><figcaption class="token-name">--empty-icon</figcaption></figure>
+        <figure class="card" data-color="--tip-background"><span class="swatch" style="--swatch: var(--tip-background)"></span><figcaption class="token-name">--tip-background</figcaption></figure>
+        <figure class="card" data-color="--sorting-food"><span class="swatch" style="--swatch: var(--sorting-food)"></span><figcaption class="token-name">--sorting-food</figcaption></figure>
+        <figure class="card" data-color="--sorting-packaging"><span class="swatch" style="--swatch: var(--sorting-packaging)"></span><figcaption class="token-name">--sorting-packaging</figcaption></figure>
+        <figure class="card" data-color="--sorting-hazardous"><span class="swatch" style="--swatch: var(--sorting-hazardous)"></span><figcaption class="token-name">--sorting-hazardous</figcaption></figure>
+      </div>
+    </section>
+
+    <section id="layout" class="section">
+      <h2>Layout och typografi</h2>
+      <p><a href="layout/tokens.css">Layoutvariabler</a> · <a href="layout/application.css">Gemensamma komponentstilar</a> · <a href="layout/hero.svg">Heroillustration</a></p>
+      <div class="planner-grid">
+        <article class="card">
+          <p class="eyebrow">TYPOGRAFI</p><h3>En lugn och tydlig vardag</h3><p>Arial, Helvetica, sans-serif. Brödtext med generöst radavstånd och tydliga rubriker.</p>
+          <div class="demo-controls"><button type="button">Primär knapp</button><button class="secondary" type="button">Sekundär</button><button type="button" disabled>Inaktiv</button></div>
+          <label for="example">Exempelfält</label><input id="example" placeholder="Gatuadress och postort">
+          <ul class="layout-values">
+            <li><code data-layout="--content-width">--content-width</code></li>
+            <li><code data-layout="--page-gutter">--page-gutter</code></li>
+            <li><code data-layout="--page-gutter-mobile">--page-gutter-mobile</code></li>
+            <li><code data-layout="--grid-gap">--grid-gap</code></li>
+            <li><code data-layout="--card-radius">--card-radius</code></li>
+            <li><code data-layout="--control-height">--control-height</code></li>
+          </ul>
+        </article>
+        <article class="card results"><h3>Illustration och resultatkort</h3><svg class="illustration" viewBox="0 0 480 350" role="img" aria-label="Två avfallskärl redo för hämtning"><use href="layout/hero.svg#hero"></use></svg><div class="tip"><strong>Vänlig, praktisk och tydlig.</strong><p>Illustrationen använder samma färgvariabler som gränssnittet.</p></div></article>
+      </div>
+      <div class="sorting-grid section"><article class="sort-card"><h3>Matavfall</h3><p>Grön yta.</p></article><article class="sort-card"><h3>Förpackningar</h3><p>Varm yta.</p></article><article class="sort-card"><h3>Särskild insamling</h3><p>Kall yta.</p></article></div>
+    </section>
+  </main>
+</body>
+</html>

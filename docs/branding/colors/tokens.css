@@ -1,0 +1,34 @@
+:root {
+  --ink: #173b30;
+  --green: #246647;
+  --paper: #fafaf4;
+  --muted: #53675d;
+  --line: #d9e3d9;
+  --surface: #ffffff;
+  --green-hover: #184b33;
+  --disabled-background: #e2e8e1;
+  --disabled-ink: #526056;
+  --disabled-border: #c3cdc2;
+  --secondary-hover: #e9f1e6;
+  --focus: #bd651c;
+  --accent: #b56228;
+  --illustration-background: #e8eedb;
+  --sun: #ac6621;
+  --bin-green: #337953;
+  --bin-brown: #9d6842;
+  --bin-green-lid: #234d37;
+  --bin-brown-lid: #764727;
+  --bin-symbol: #fff9df;
+  --wheel: #263c32;
+  --label-background: #fffdf4;
+  --bin-shadow: #00000014;
+  --label-shadow: #173b3010;
+  --input-border: #a6b8ab;
+  --results-background: #f1f5eb;
+  --tag-background: #dfe9d6;
+  --empty-icon: #8b6236;
+  --tip-background: #e1ebd7;
+  --sorting-food: #ecefdf;
+  --sorting-packaging: #f3eadc;
+  --sorting-hazardous: #e6eeec;
+}

@@ -4,10 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "branding:sync": "node scripts/sync-branding.mjs",
+    "predev": "npm run branding:sync",
     "dev": "next dev",
+    "prebuild": "npm run branding:sync",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "pretest": "npm run branding:sync",
     "test": "node --experimental-strip-types --test tests/*.test.mjs"
   },
   "dependencies": {

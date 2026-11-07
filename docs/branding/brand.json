@@ -1,0 +1,13 @@
+{
+  "name": "Sopham",
+  "title": "Sopham – koll på sophämtningen i Stockholm",
+  "description": "Förbered dina kärl och skapa en kalender för sophämtning i Stockholm. Utan konto.",
+  "tagline": "Lite enklare vardag. Lite gladare planet.",
+  "calendarProductId": "-//Sopham//Sophämtning//SV",
+  "calendarUidDomain": "sopham",
+  "calendarFilename": "sophamtning.ics",
+  "logo": "logos/wordmark.svg",
+  "favicon": "icons/favicon.svg",
+  "illustration": "layout/hero.svg",
+  "icons": ["recycle", "sun", "spark", "heart", "arrow-up-right", "arrow-right", "download", "food", "package", "battery"]
+}

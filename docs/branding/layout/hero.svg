@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 350" id="hero">
+  <path d="M240 0C380 0 480 65 480 170S405 350 240 350 0 275 0 170 90 0 240 0" fill="var(--illustration-background)"/>
+  <text x="55" y="78" font-family="Arial, Helvetica, sans-serif" font-size="48" fill="var(--sun)">☀</text>
+  <text x="415" y="108" font-size="32" fill="var(--green)">✦</text>
+  <g transform="rotate(-8 133 194)">
+    <rect x="80" y="116" width="106" height="156" rx="14" fill="var(--bin-green)"/>
+    <path d="M173 116h13v142q0 14-13 14z" fill="var(--bin-shadow)"/>
+    <rect x="73" y="106" width="120" height="18" rx="6" fill="var(--bin-green-lid)"/>
+    <text x="133" y="204" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="54" fill="var(--bin-symbol)">♻</text>
+    <g fill="var(--wheel)"><circle cx="95" cy="272" r="11.5"/><circle cx="171" cy="272" r="11.5"/></g>
+  </g>
+  <g transform="rotate(8 271 211)">
+    <rect x="218" y="133" width="106" height="156" rx="14" fill="var(--bin-brown)"/>
+    <path d="M311 133h13v142q0 14-13 14z" fill="var(--bin-shadow)"/>
+    <rect x="211" y="123" width="120" height="18" rx="6" fill="var(--bin-brown-lid)"/>
+    <text x="271" y="221" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="54" fill="var(--bin-symbol)">♡</text>
+    <g fill="var(--wheel)"><circle cx="233" cy="289" r="11.5"/><circle cx="309" cy="289" r="11.5"/></g>
+  </g>
+  <g transform="rotate(-4 240 310)">
+    <rect x="144" y="297" width="192" height="36" rx="12" fill="var(--label-shadow)"/>
+    <rect x="144" y="294" width="192" height="36" rx="12" fill="var(--label-background)"/>
+    <text x="240" y="317" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="var(--ink)">Redo för en ny runda!</text>
+  </g>
+</svg>
