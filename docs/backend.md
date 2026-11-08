@@ -33,15 +33,27 @@ Produktionskonfigurationen ska förbli avstängd tills tillämplig rättslig gru
 
 För en frontend med egen same-origin-backend kan `NEXT_PUBLIC_PICKUP_WORKER_URL=/pickups` användas. Ange backendens verkliga driftmiljö med `NEXT_PUBLIC_PICKUP_BACKEND_PROVIDER` så att samtyckestexten inte felaktigt anger Cloudflare; standardvärdet är Cloudflare. Lokal HTTP fungerar för sökning och kalenderexport, men verklig platsåtkomst kräver normalt HTTPS. Använd hela adressvärdet från SVOA:s autocomplete, inklusive postort och postnummer: förkortade gatunamn kan ge felsvar även med HTTP 200.
 
+### HTTPS och reverse proxy i ett privat LAN
+
+Privata `.lan`-namn behöver normalt en egen lokal certifikatutfärdare (CA). Varje klientenhet måste uttryckligen lita på CA:ns publika certifikat. Ett servercertifikat kan omfatta både LAN-hubben och dess wildcard-subdomän; wildcard täcker en subdomännivå, inte huvudnamnet. Certifikat är inte bundna till portar.
+
+En central reverse proxy kan terminera HTTPS och vidarebefordra till frontendens interna HTTP-tjänst. Behåll `/pickups` och `/addresses`, POST/OPTIONS, request-body och den ursprungliga `Origin`-headern. Backend måste tillåta den exakta externa origin som användaren besöker; wildcard-certifikat innebär inte wildcard-CORS. För en containeriserad proxy avser `127.0.0.1` dess egen container, inte servervärden.
+
+CA:ns privata nyckel ska stanna på den betrodda utvecklingsenheten. Endast servercertifikat och servernyckel behövs hos proxyn. Lägg aldrig privata nycklar, personliga testadresser eller verklig lokal driftkonfiguration i det publika repot; håll privata driftsfiler i den ignorerade `.one/`-mappen. Dela bara CA:ns publika certifikat med klientenheter och verifiera dess ursprung före installation.
+
+Byte av HTTP till HTTPS, hostname eller port skapar en ny browser-origin. Sparad adress och samtycke flyttas inte automatiskt mellan dessa. HTTPS undanröjer begränsningen för osäkra origins, men användaren måste fortfarande tillåta platsåtkomst och enheten måste kunna leverera en position.
+
 ## Kontrakt och skydd
 
-- Endast `POST /pickups` med JSON-adress och tillåten origin. Preflight tillåter enbart POST och Content-Type. Cookies används inte.
+- Endast `POST /pickups` och `POST /addresses` med JSON och tillåten origin. Preflight tillåter enbart POST och Content-Type. Cookies används inte.
+- `POST /addresses` tar JSON `{ "query": "gata och nummer" }` och returnerar validerade `{ "value": "fullständig officiell adress" }`-förslag från SVOA:s `AutoCompleteMe`. Samma samtycke i frontend, tillståndsspärr, origin-, body- och rate-limit-skydd gäller. Query kräver minst tre tecken. Inga förslag lagras.
+- Adressförslag använder texten före första kommatecknet. Om en förkortad gata med husnummer inte ger träff görs en begränsad sökning efter officiellt gatunamn och därefter samma husnummer. Flera matchande gatunamn ger 422; inget hus väljs automatiskt. Högst tre upstreamanrop delar en 8-sekunders deadline och en rate-limit-kvot per klientanrop.
 - Adressen är högst 200 tecken, utan kontrolltecken. Request-body begränsas till 2048 byte även utan Content-Length.
 - Upstream-URL är fast; klienten kan inte välja målserver. Redirects följs inte.
 - Cloudflare rate limiting: 10 anrop per 60 sekunder per anslutande IP. Bindningen krävs; saknad bindning stoppar sökningen. Begränsningen är lokal till Cloudflares infrastruktur och är inte en global exakt kvot.
 - Origin/CORS är inte autentisering: andra klienter kan sätta en Origin-header. Följ trafik och kostnader i Cloudflares administratörsgränssnitt utan adressloggning och konfigurera ytterligare driftbegränsningar efter behov.
-- Upstream har 8 sekunders timeout, högst 65536 byte svar och måste returnera JSON med validerbara datum. Felsvar blir 4xx/5xx, aldrig tomma lyckade listor.
-- Backend returnerar bara `group`, `executionDate` och `fetchFrequency`. `Cache-Control: no-store`; inga resultat lagras i KV, databas eller cache.
+- Upstream har 8 sekunders timeout och högst 65536 byte per svar. JSON valideras som hämtningsdata eller adressförslag beroende på endpoint. Felsvar blir 4xx/5xx, aldrig tomma lyckade listor.
+- `/pickups` returnerar bara `group`, `executionDate` och `fetchFrequency`; `/addresses` returnerar bara `value`. `Cache-Control: no-store`; inga resultat lagras i KV, databas eller cache.
 - Kodens loggar innehåller endast felkod och HTTP-status. Observability är avstängt i konfigurationen. Aktivera inte request-/body-loggning eller URL-loggning i drift utan separat integritetsbedömning.
 - Frontend kan avbryta sin förfrågan och ignorera sena resultat. Ett redan startat upstreamanrop kan inte garanterat återkallas.
 

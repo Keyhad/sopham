@@ -45,27 +45,46 @@ export function parsePickups(data: unknown): Pickup[] {
   return pickups.sort((a, b) => a.date.localeCompare(b.date));
 }
 
-export async function fetchPickups(address: string, signal: AbortSignal): Promise<Pickup[]> {
+export class BackendError extends Error {}
+
+export async function postLookup(body: { address: string } | { query: string }, signal: AbortSignal): Promise<unknown> {
   const endpoint = process.env.NEXT_PUBLIC_PICKUP_WORKER_URL;
-  if (!endpoint) throw new Error("Adressökningen är avstängd i väntan på tillstånd från SVOA.");
+  if (!endpoint) throw new BackendError("Adressökningen är avstängd i väntan på tillstånd från SVOA.");
   const sameOrigin = endpoint.startsWith("/") && !endpoint.startsWith("//");
   const url = new URL(endpoint, typeof window === "undefined" ? "http://localhost" : window.location.origin);
   if (url.protocol !== "https:" && !(url.protocol === "http:" && (sameOrigin || ["localhost", "127.0.0.1"].includes(url.hostname)))) {
-    throw new Error("Adressökningen kräver en säker backendadress.");
+    throw new BackendError("Adressökningen kräver en säker backendadress.");
+  }
+  if ("query" in body) {
+    if (!url.pathname.endsWith("/pickups")) throw new BackendError("Backendadressen måste sluta med /pickups för att hitta adressförslag.");
+    url.pathname = url.pathname.replace(/\/pickups$/, "/addresses");
   }
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ address }),
+    body: JSON.stringify(body),
     signal,
     credentials: "omit",
     referrerPolicy: "no-referrer",
     cache: "no-store",
   });
-  if (!response.ok) throw new Error("Datakällan svarade inte.");
-  const rows: unknown = await response.json();
-  if (!Array.isArray(rows)) throw new Error("Oväntat svar från datakällan.");
-  return parsePickups(rows);
+  if (!response.ok) {
+    const messages: Record<number, string> = {
+      400: "Kontrollera gatuadressen och skriv minst tre tecken för adressförslag.",
+      403: "Denna webbplats är inte tillåten av backend. Kontakta den som driver Sopham.",
+      422: "Gatuförkortningen matchar flera gator. Skriv mer av gatunamnet och försök igen.",
+      429: "För många sökningar. Vänta en minut och försök igen.",
+      502: "SVOA kunde inte lämna läsbara uppgifter. Använd Hitta rätt adress och välj den fullständiga adressen.",
+      503: "Adressökningens backend är avstängd eller inte tillgänglig just nu.",
+      504: "SVOA svarade inte i tid. Försök igen.",
+    };
+    throw new BackendError(messages[response.status] || "Datakällan svarade inte. Försök igen eller sök direkt hos SVOA.");
+  }
+  return response.json();
+}
+
+export async function fetchPickups(address: string, signal: AbortSignal): Promise<Pickup[]> {
+  return parsePickups(await postLookup({ address }, signal));
 }
 
 function escapeCalendar(value: string): string {

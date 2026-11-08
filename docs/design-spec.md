@@ -51,6 +51,8 @@ Symboler och emoji behåller befintliga motiv. Emoji och SVG-text använder syst
 - Behåll tangentbordsnavigation, inaktiva knappar och `prefers-reduced-motion`.
 - Verifiera WCAG AA-kontrast efter palettändringar: minst 4,5:1 för normal text och 3:1 för stor text och relevanta kontur-/fokuselement.
 - Adressökning kräver uttryckligt samtycke. Återkallande avbryter sökning och ogiltigförklarar platsåterkoppling.
+- Adressförslag hämtas endast med knappen Hitta rätt adress efter samtycke, inte automatiskt vid tangenttryckningar. Förslag visas som textmärkta knappar som också fungerar med tangentbord. Användaren väljer alltid fullständig adress före hämtning; tvetydiga gatunamn gissas inte. Redigering, återkallande och lägesbyte avbryter väntande förslag.
+- Platskontrollen hittar inte gatuadressen. Osäker HTTP-origin, nekad behörighet, saknad position och timeout förklaras tydligt utan att platsbehörighet kringgås.
 - Adressökning är avstängd utan konfigurerad backend. När den aktiveras beskriver samtycket behandling hos Cloudflare och vidarebefordran till SVOA. Backend kräver separat SVOA-tillstånd; se [driftsinstruktioner](backend.md).
 - Platskontroll är frivillig och lokal. Inget konto eller spårning införs. Brandingkatalogen använder ingen lokal lagring.
 - Appens minnesval är separat och frivilligt. Det sparar adress, samtycke, senaste officiella resultat och kontrolltid på enheten; återbesök och nytt dygn uppdaterar automatiskt till samma backend. Glöm/återkalla rensar lagringen. Sparade resultat märks INTE UPPDATERAT tills en ny sökning lyckas; äldre datum ersätts aldrig med gissningar.

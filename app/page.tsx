@@ -4,7 +4,9 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import Link from "next/link";
 import brand from "@/docs/branding/brand.json";
 import { BrandIcon, BrandIllustration, BrandLogo } from "./branding";
-import { createCalendar, fetchPickups, lookupAvailable, OFFICIAL_URL, stockholmToday, validDate, type Pickup } from "@/lib/pickups";
+import { BackendError, createCalendar, fetchPickups, lookupAvailable, OFFICIAL_URL, stockholmToday, validDate, type Pickup } from "@/lib/pickups";
+import { fetchAddresses, type AddressSuggestion } from "@/lib/addresses";
+import { locationErrorMessage } from "@/lib/location";
 import { DEMO_FILENAME, DEMO_SOURCE, demoPickups } from "@/lib/demo";
 import { forgetRemembered, readRemembered, saveRemembered, REMEMBERED_KEY } from "@/lib/remembered";
 import { pickupMaterials } from "@/lib/pickup-display";
@@ -30,6 +32,9 @@ export default function Home() {
   const [demo, setDemo] = useState(false);
   const [consent, setConsent] = useState(false);
   const [address, setAddress] = useState("");
+  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+  const [addressStatus, setAddressStatus] = useState("");
+  const [findingAddress, setFindingAddress] = useState(false);
   const [pickups, setPickups] = useState<Pickup[]>([]);
   const [source, setSource] = useState("");
   const [status, setStatus] = useState("");
@@ -45,6 +50,7 @@ export default function Home() {
   const [storedAddress, setStoredAddress] = useState("");
   const [today, setToday] = useState(stockholmToday);
   const request = useRef<AbortController | null>(null);
+  const addressRequest = useRef<AbortController | null>(null);
   const locationVersion = useRef(0);
   const rememberCurrent = useRef(false);
   const savedAddress = useRef("");
@@ -52,8 +58,19 @@ export default function Home() {
   const current = pickups.filter((pickup) => pickup.date >= today);
   const canSearch = demo || lookupAvailable();
   const invalidateLocation = useCallback(() => { locationVersion.current++; }, []);
+  const invalidateAddressSearch = useCallback(() => {
+    addressRequest.current?.abort();
+    addressRequest.current = null;
+  }, []);
+  const clearAddressSearch = useCallback(() => {
+    invalidateAddressSearch();
+    setFindingAddress(false);
+    setAddressSuggestions([]);
+    setAddressStatus("");
+  }, [invalidateAddressSearch]);
 
   const loadPickups = useCallback(async (lookupAddress: string, isDemo: boolean, preserve: boolean) => {
+    clearAddressSearch();
     request.current?.abort();
     const controller = new AbortController();
     request.current = controller;
@@ -104,14 +121,15 @@ export default function Home() {
         }
       }
       return true;
-    } catch {
+    } catch (error) {
       if (request.current !== controller) return;
       setStale(preserve);
       setStatus(isDemo
         ? "DEMO – den simulerade sökningen avbröts eller kunde inte visas. Försök igen."
         : preserve
         ? "Kunde inte uppdatera. Senast sparade uppgifter visas – kontrollera dem hos SVOA."
-        : "Vi kunde inte läsa hämtningsdata. Kontrollera hela adressen hos SVOA, eller lägg in datumet själv.");
+        : error instanceof BackendError ? error.message
+        : "Vi kunde inte läsa hämtningsdata. Använd Hitta rätt adress och välj ett förslag, eller lägg in datumet själv.");
       return false;
     } finally {
       clearTimeout(timeout);
@@ -120,7 +138,7 @@ export default function Home() {
         setBusy(false);
       }
     }
-  }, []);
+  }, [clearAddressSearch]);
 
   useEffect(() => {
     async function restore() {
@@ -152,7 +170,7 @@ export default function Home() {
     const refreshOnReturn = () => {
       setToday(stockholmToday());
       if (document.visibilityState === "visible" && rememberCurrent.current && savedAddress.current &&
-          lookupAvailable() && !request.current && Date.now() - lastAttempt.current > 30000) {
+          lookupAvailable() && !request.current && !addressRequest.current && Date.now() - lastAttempt.current > 30000) {
         void loadPickups(savedAddress.current, false, true);
       }
     };
@@ -166,6 +184,7 @@ export default function Home() {
     }, 60000);
     const changedElsewhere = (event: StorageEvent) => {
       if (event.key !== REMEMBERED_KEY && event.key !== null) return;
+      clearAddressSearch();
       request.current?.abort();
       request.current = null;
       rememberCurrent.current = false;
@@ -195,8 +214,39 @@ export default function Home() {
       request.current?.abort();
       request.current = null;
       invalidateLocation();
+      invalidateAddressSearch();
     };
-  }, [loadPickups, invalidateLocation]);
+  }, [loadPickups, invalidateLocation, invalidateAddressSearch, clearAddressSearch]);
+
+  async function findAddress() {
+    if (!consent || !lookupAvailable() || demo || address.trim().length < 3) {
+      setAddressStatus("Skriv minst tre tecken och bekräfta samtycket för att hitta adressförslag.");
+      return;
+    }
+    clearAddressSearch();
+    const controller = new AbortController();
+    addressRequest.current = controller;
+    setFindingAddress(true);
+    setAddressStatus("Hämtar adressförslag från SVOA …");
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    try {
+      const suggestions = await fetchAddresses(address.trim(), controller.signal);
+      if (addressRequest.current !== controller) return;
+      setAddressSuggestions(suggestions);
+      setAddressStatus(suggestions.length
+        ? "Välj din fullständiga adress nedan och tryck sedan Visa hämtningsdagar. Kontrollera husnummer och postort."
+        : "Inga adresser hittades. Skriv mer av gatunamnet och husnumret, eller sök direkt hos SVOA.");
+    } catch (error) {
+      if (addressRequest.current !== controller) return;
+      setAddressStatus(error instanceof BackendError ? error.message : "Adressförslagen kunde inte läsas. Försök igen eller sök direkt hos SVOA.");
+    } finally {
+      clearTimeout(timeout);
+      if (addressRequest.current === controller) {
+        addressRequest.current = null;
+        setFindingAddress(false);
+      }
+    }
+  }
 
   async function search(event: React.FormEvent) {
     event.preventDefault();
@@ -222,9 +272,33 @@ export default function Home() {
     }
   }
 
-  function locate() {
+  function editAddress(value: string) {
+    clearAddressSearch();
+    request.current?.abort();
+    request.current = null;
+    setBusy(false);
+    setAddress(value);
+    setPickups([]);
+    setSource("");
+    setStatus("");
+    setResultAddress("");
+    setCheckedAt(null);
+    setStale(false);
+    if (savedAddress.current) {
+      const optedIn = rememberCurrent.current;
+      forget();
+      rememberCurrent.current = optedIn;
+      setRemember(optedIn);
+    }
+  }
+
+  async function locate() {
     if (demo) {
       setLocation("DEMO – simulerad områdeskontroll för Stockholm. Ingen platsåtkomst har begärts.");
+      return;
+    }
+    if (!window.isSecureContext) {
+      setLocation("Platsåtkomst kräver HTTPS, även på ett lokalt nätverk. Öppna den säkra webbplatsadressen eller skriv gatuadressen.");
       return;
     }
     if (!navigator.geolocation) {
@@ -233,6 +307,27 @@ export default function Home() {
     }
     const version = ++locationVersion.current;
     setLocation("Väntar på ditt tillstånd till platsåtkomst …");
+    if (navigator.permissions) {
+      let permissionTimeout: ReturnType<typeof setTimeout> | undefined;
+      try {
+        const permission = await Promise.race([
+          navigator.permissions.query({ name: "geolocation" }),
+          new Promise<never>((_, reject) => {
+            permissionTimeout = setTimeout(() => reject(new Error("Permission check timed out")), 2000);
+          }),
+        ]);
+        if (version !== locationVersion.current) return;
+        if (permission.state === "denied") {
+          setLocation(locationErrorMessage(1));
+          return;
+        }
+      } catch {
+        if (version !== locationVersion.current) return;
+        setLocation("Webbläsaren kunde inte läsa platsbehörigheten. Försöker platskontroll ändå …");
+      } finally {
+        clearTimeout(permissionTimeout);
+      }
+    }
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       if (version !== locationVersion.current) return;
       const inRegion = coords.latitude >= 59.1 && coords.latitude <= 59.5 &&
@@ -240,12 +335,13 @@ export default function Home() {
       setLocation(inRegion
         ? "Du verkar vara i Stockholmsområdet. Skriv din gatuadress nedan för rätt hämtningsdag. Platsen används bara här och har inte skickats vidare."
         : "Din ungefärliga plats verkar vara utanför Stockholmsområdet. Du kan ändå söka på en adress i Stockholms stad.");
-    }, () => {
-      if (version === locationVersion.current) setLocation("Platsåtkomst nekades eller kunde inte bestämmas. Du kan fortfarande skriva en adress.");
+    }, (error) => {
+      if (version === locationVersion.current) setLocation(locationErrorMessage(error.code));
     }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 });
   }
 
   function clear() {
+    clearAddressSearch();
     request.current?.abort();
     request.current = null;
     locationVersion.current++;
@@ -266,6 +362,7 @@ export default function Home() {
   function addManual(event: React.FormEvent) {
     event.preventDefault();
     if (!validDate(date) || date < stockholmToday()) return;
+    clearAddressSearch();
     request.current?.abort();
     request.current = null;
     setBusy(false);
@@ -335,33 +432,16 @@ export default function Home() {
             <div className="card">
               <h3>Hitta din hämtning</h3>
               <p>{demo ? "DEMO – använd en påhittad exempeladress. Samma syntetiska resultat visas för alla adresser, utan nätverksanrop." : canSearch
-                ? `Adressökningen går via Sophams backend (${backendProvider}) till Stockholm Vatten och Avfall. Åtkomsten är inte garanterad. Ange hela adressen som den visas i SVOA:s sökning, inklusive postort och postnummer.`
+                ? `Adressökningen går via Sophams backend (${backendProvider}) till Stockholm Vatten och Avfall. Åtkomsten är inte garanterad. Skriv gata och husnummer, bekräfta samtycket och välj Hitta rätt adress för SVOA:s fullständiga adressformat.`
                 : "Adressökningen är avstängd i väntan på tillstånd från SVOA. Sök via länken nedan och lägg in ett eget, kontrollerat datum i resultatkortet."}</p>
-              <button className="secondary" type="button" onClick={locate}>Använd min ungefärliga plats (frivilligt)</button>
+              <button className="secondary" type="button" onClick={() => { void locate(); }}>Kontrollera Stockholmsområdet med min plats (frivilligt)</button>
               <p className="small">{demo
                 ? "DEMO – knappen visar bara ett simulerat platsmeddelande. Webbläsarens platsåtkomst används inte."
                 : "När du trycker godkänner du att webbläsaren använder din plats för en ungefärlig områdeskontroll, inte för att hitta din adress. Koordinater sparas inte eller skickas till oss."}</p>
               <p role="status" className="small">{location}</p>
               <form onSubmit={search}>
                 <label htmlFor="address">Gatuadress och postort</label>
-                <input id="address" disabled={!canSearch} autoComplete={demo ? "off" : "street-address"} placeholder={demo ? "Till exempel: Exempelgatan 12, Stockholm" : "Till exempel: din gata 12, Bromma"} value={address} onChange={(event) => {
-                  request.current?.abort();
-                  request.current = null;
-                  setBusy(false);
-                  setAddress(event.target.value);
-                  setPickups([]);
-                  setSource("");
-                  setStatus("");
-                  setResultAddress("");
-                  setCheckedAt(null);
-                  setStale(false);
-                  if (savedAddress.current) {
-                    const optedIn = rememberCurrent.current;
-                    forget();
-                    rememberCurrent.current = optedIn;
-                    setRemember(optedIn);
-                  }
-                }} maxLength={200} required />
+                <input id="address" disabled={!canSearch} autoComplete={demo ? "off" : "street-address"} placeholder={demo ? "Till exempel: Exempelgatan 12, Stockholm" : "Till exempel: din gata 12, Bromma"} value={address} onChange={(event) => editAddress(event.target.value)} maxLength={200} required />
                 <label className="check"><input type="checkbox" disabled={!canSearch} checked={consent} onChange={(event) => {
                   if (!event.target.checked) clear();
                   else setConsent(true);
@@ -375,7 +455,12 @@ export default function Home() {
                     setRemember(true);
                   }
                 }} /><span>Kom ihåg på den här enheten. Vid nästa sökning sparas adress, samtycke och senaste resultat i webbläsaren. Adressen skickas automatiskt igen vid återbesök och när ett nytt dygn börjar. Använd inte på en delad enhet.</span></label>}
-                <button type="submit" disabled={!canSearch || !consent || busy || !address.trim()}>{busy ? "Hämtar …" : "Visa hämtningsdagar"} <BrandIcon name="arrow-right" /></button>
+                {!demo && <>
+                  <button type="button" className="secondary" disabled={!canSearch || !consent || address.trim().length < 3 || findingAddress || busy} onClick={() => { void findAddress(); }}>{findingAddress ? "Hittar adress …" : "Hitta rätt adress"}</button>
+                  <p role="status" className="small">{addressStatus}</p>
+                  {addressSuggestions.length > 0 && <ul className="address-suggestions" aria-label="Adressförslag från SVOA">{addressSuggestions.map(suggestion => <li key={suggestion.value}><button type="button" className="secondary" onClick={() => editAddress(suggestion.value)}>{suggestion.value}</button></li>)}</ul>}
+                </>}
+                <button type="submit" disabled={!canSearch || !consent || busy || findingAddress || !address.trim()}>{busy ? "Hämtar …" : "Visa hämtningsdagar"} <BrandIcon name="arrow-right" /></button>
               </form>
               <a className="source-link" href={OFFICIAL_URL} target="_blank" rel="noreferrer">Sök direkt hos Stockholm Vatten och Avfall <BrandIcon name="arrow-up-right" /></a>
             </div>

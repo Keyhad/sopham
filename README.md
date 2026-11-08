@@ -51,6 +51,25 @@ Endast nästa datum per kärl visas. Kalenderfiler innehåller enstaka heldagsh�
 
 Frivillig geolokalisering gör endast en ungefärlig lokal områdeskontroll; den hittar inte gatuadressen och skickar inte koordinater vidare. Utan ”Kom ihåg” rensas uppgifter vid omladdning. Återkallat samtycke rensar både sidans minne och eventuell sparad adress och stoppar vidare sökning i fliken. Kalenderfiler och redan skickade förfrågningar kan inte återkallas.
 
+**Hitta rätt adress** hämtar SVOA:s officiella adressförslag efter samtycke och en uttrycklig knapptryckning. Sökningen använder gata och husnummer före första kommatecknet, så en felskriven postort inte blockerar förslagen. Vid en gatuförkortning utan träff kan backend läsa officiella gatuförslag och söka på ett entydigt gatunamn med det angivna husnumret. Högst tre upstreamanrop görs inom samma timeout. Flera matchande gator kräver mer text, inte en gissning. Användaren måste välja den fullständiga adressen och sedan söka hämtningsdatum. Förslag sparas inte och hämtas inte medan användaren skriver eller i demo.
+
+Platskontrollen kräver en säker origin (HTTPS eller localhost), även i LAN. Blockerad behörighet, saknad position och timeout får olika meddelanden. Browser- och OS-behörighet kan inte kringgås av appen; en inbyggd webbläsare kan behöva ersättas med Safari eller Chrome för platskontroll.
+
+### Så söker du en adress
+
+1. Skriv gatunamn och husnummer, minst tre tecken.
+2. Bekräfta samtycket. Välj även **Kom ihåg på den här enheten** om adress och resultat ska finnas kvar vid återbesök.
+3. Tryck **Hitta rätt adress** och välj ditt officiella adressförslag. Kontrollera husnummer, postort och postnummer.
+4. Tryck **Visa hämtningsdagar**. Adressförslag i sig hämtar inga hämtningsdatum.
+
+En redan fullständig officiell adress kan sökas direkt. Om adressförslag saknas, skriv mer av gatunamnet eller använd SVOA:s egen sökning. Vid 429: vänta en minut innan nästa försök.
+
+### Om platskontrollen inte fungerar
+
+Att en LAN-sida går att öppna över HTTP betyder inte att den får använda platsåtkomst. Använd HTTPS med ett betrott certifikat och tillåt plats både i webbläsarens webbplatsinställningar och i enhetens platstjänster. På macOS finns den senare inställningen under Systeminställningar → Integritet och säkerhet → Platstjänster.
+
+HTTPS tillhandahåller inte en position. En nekad behörighet eller en enhet som inte kan bestämma sin position kan fortfarande stoppa platskontrollen. Vid timeout i en inbyggd webbläsare: prova samma HTTPS-adress i Safari eller Chrome. Platsknappen kontrollerar bara Stockholmsområdet; adressökningen fungerar separat utan platsåtkomst.
+
 ## Nästa hämtning först och valfri sparad adress
 
 Första vyn visar nästa bekräftade datum med stora **IDAG**, **IMORGON** eller **OM N DAGAR** och tydliga, textmärkta materialbilder. Alla kärl med samma nästa datum visas tillsammans; andra datum finns i den fullständiga listan. Datum beräknas utifrån Stockholms kalenderdygn, inte användarens lokala tidszon eller uppskattad återkommande frekvens.

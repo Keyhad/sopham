@@ -8,11 +8,68 @@ const environment = () => ({
   SVOA_ACCESS_APPROVED: "true",
   RATE_LIMITER: { limit: async () => ({ success: true }) },
 });
-const request = (body = JSON.stringify({ address: "Testgatan 12, Stockholm" }), options = {}) => new Request("https://worker.example/pickups", {
+const request = (body = JSON.stringify({ address: "Testgatan 12, Stockholm" }), options = {}, route = "/pickups") => new Request(`https://worker.example${route}`, {
   method: "POST",
   headers: { Origin: origin, "Content-Type": "application/json", "CF-Connecting-IP": "192.0.2.1" },
   body,
   ...options,
+});
+
+test("address suggestions share the permission, origin, input and rate-limit guards", async t => {
+  t.mock.method(console, "error", () => {});
+  t.mock.method(globalThis, "fetch", async () => { assert.fail("Unexpected upstream request"); });
+  const query = body => request(JSON.stringify(body), {}, "/addresses");
+  assert.equal((await worker.fetch(query({ query: "Test" }), { ...environment(), SVOA_ACCESS_APPROVED: "false" })).status, 503);
+  assert.equal((await worker.fetch(request(null, { method: "GET" }, "/addresses"), environment())).status, 405);
+  assert.equal((await worker.fetch(request("{}", { headers: { Origin: "https://other.example" } }, "/addresses"), environment())).status, 403);
+  for (const body of [{}, { query: "ab" }, { query: 12 }, { query: "x".repeat(201) }, { query: "abc\nx" }]) {
+    assert.equal((await worker.fetch(query(body), environment())).status, 400);
+  }
+  assert.equal((await worker.fetch(query({ query: "Test" }), { ...environment(), RATE_LIMITER: { limit: async () => ({ success: false }) } })).status, 429);
+  const preflight = await worker.fetch(request(null, {
+    method: "OPTIONS", headers: { Origin: origin, "Access-Control-Request-Method": "POST", "Access-Control-Request-Headers": "content-type" },
+  }, "/addresses"), environment());
+  assert.equal(preflight.status, 204);
+  assert.equal(preflight.headers.get("Access-Control-Allow-Origin"), origin);
+});
+
+test("abbreviated addresses resolve through official street suggestions, without inventing a house", async t => {
+  const terms = [];
+  let deadline;
+  t.mock.method(globalThis, "fetch", async (url, options) => {
+    assert.equal(url.hostname, "www.stockholmvattenochavfall.se");
+    assert.ok(url.pathname.endsWith("/AutoCompleteMe"));
+    assert.equal(options.redirect, "error");
+    assert.equal(options.cache, "no-store");
+    deadline ||= options.signal;
+    assert.equal(options.signal, deadline);
+    terms.push(url.searchParams.get("query"));
+    return Response.json(terms.length === 1 ? [] : terms.length === 2
+      ? [{ value: "Testvägen 3, Exempelort, 123 45", data: "123 45" }, { value: "Testvägen 5, Exempelort, 123 45" }]
+      : [{ value: "Testvägen 12, Exempelort, 123 45", data: "123 45", extra: "private" }]);
+  });
+  const response = await worker.fetch(request(JSON.stringify({ query: "Testv 12, Felort, 12345" }), {}, "/addresses"), environment());
+  assert.equal(response.status, 200);
+  assert.deepEqual(terms, ["Testv 12", "Testv", "Testvägen 12"]);
+  assert.deepEqual(await response.json(), [{ value: "Testvägen 12, Exempelort, 123 45" }]);
+  assert.equal(response.headers.get("Cache-Control"), "no-store");
+});
+
+test("address lookup preserves exact results and rejects ambiguous or malformed suggestions", async t => {
+  t.mock.method(console, "error", () => {});
+  const lookup = () => worker.fetch(request('{"query":"Testv 12"}', {}, "/addresses"), environment());
+  t.mock.method(globalThis, "fetch", async () => Response.json([{ value: "Testvägen 12, Exempelort, 123 45" }]));
+  assert.deepEqual(await (await lookup()).json(), [{ value: "Testvägen 12, Exempelort, 123 45" }]);
+  let calls = 0;
+  t.mock.method(globalThis, "fetch", async () => Response.json(++calls === 1 ? [] : [
+    { value: "Testvägen 3, Exempelort, 123 45" }, { value: "Testgatan 5, Exempelort, 123 45" },
+  ]));
+  assert.equal((await lookup()).status, 422);
+  assert.equal(calls, 2);
+  t.mock.method(globalThis, "fetch", async () => Response.json({ error: "not addresses" }));
+  assert.equal((await lookup()).status, 502);
+  t.mock.method(globalThis, "fetch", async () => Response.json([]));
+  assert.deepEqual(await (await lookup()).json(), []);
 });
 
 test("Worker enforces permission, origin, method, route and preflight without contacting SVOA", async t => {

@@ -27,7 +27,7 @@ För appens löpande funktion är ett adressbaserat uppslag att föredra framfö
 Jag önskar särskilt besked om följande:
 
 1. Finns ett dokumenterat API, en öppen datamängd eller någon annan stödd åtkomstväg för denna användning? Finns i så fall dokumentation, exempelvis OpenAPI/Swagger?
-2. Om ingen separat tjänst finns: kan webbplatsens befintliga `Search`-endpoint användas för begränsade uppslag via vår backend, inklusive de frivilliga automatiska uppdateringarna ovan? Om detta inte är en stödd åtkomstväg, vilket alternativ erbjuder ni?
+2. Om ingen separat tjänst finns: kan webbplatsens befintliga `AutoCompleteMe`- och `Search`-endpoints användas för begränsade adressförslag och uppslag via vår backend, inklusive de frivilliga automatiska uppdateringarna ovan? Adressförslag hämtas bara efter samtycke och en uttrycklig knapptryckning, och användaren väljer själv sin fullständiga adress. Om detta inte är en stödd åtkomstväg, vilket alternativ erbjuder ni?
 3. Vilka villkor gäller för vidareutnyttjande och visning i appen, inklusive eventuell licens, källhänvisning, avgifter och anropsgränser? Ange gärna rättslig grund för eventuella begränsningar.
 4. Finns relevanta begränsningar med hänsyn till sekretess, personuppgifter eller tredje mans rättigheter? Kan i så fall övriga uppgifter lämnas ut separat?
 5. Om direktåtkomst från webbläsare erbjuds: kan ni stödja origin `https://keyhad.github.io` genom CORS? Ett serverbaserat alternativ är också möjligt.
