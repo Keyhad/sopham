@@ -39,6 +39,15 @@ test("synced SVG assets resolve colors from the single palette source", async ()
   assert.equal(await read("public/design-spec.md"), await read("docs/design-spec.md"));
 });
 
+test("battery icon uses the shared monochrome SVG line style instead of emoji text", async () => {
+  const sprite = await read("docs/branding/icons/sprite.svg");
+  const battery = sprite.match(/<symbol id="battery"[^>]*>([\s\S]*?)<\/symbol>/)?.[1];
+  assert.ok(battery);
+  assert.ok(!battery.includes("<text"));
+  assert.ok(battery.includes('stroke="currentColor"'));
+  assert.ok(battery.includes('fill="currentColor"'));
+});
+
 test("waste pictograms use their shared category colors with at least 3:1 symbol contrast", async () => {
   const [palette, sprite, definitions] = await Promise.all([
     read("docs/branding/colors/tokens.css"), read("docs/branding/icons/sprite.svg"), read("docs/branding/icons/materials.json"),

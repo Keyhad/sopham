@@ -1,4 +1,4 @@
-name: Publish GitHub Pages
+name: Deploy Sopham (Worker + Pages)
 
 on:
   push:
@@ -12,10 +12,10 @@ permissions:
 
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  build:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,21 +32,37 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: /sopham
           NEXT_PUBLIC_PICKUP_WORKER_URL: ${{ vars.NEXT_PUBLIC_PICKUP_WORKER_URL }}
-      - uses: actions/upload-pages-artifact@v3
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        with:
-          path: out
 
-  deploy:
+  publish:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    needs: build
+    needs: verify
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build frontend
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /sopham
+          NEXT_PUBLIC_PICKUP_WORKER_URL: ${{ vars.NEXT_PUBLIC_PICKUP_WORKER_URL }}
+      - name: Deploy Worker
+        run: npm run worker:deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
       - uses: actions/deploy-pages@v4
         id: deployment
