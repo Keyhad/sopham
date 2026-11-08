@@ -82,17 +82,21 @@ checks do not receive it.
 
 ### First deployment and frontend connection
 
-After adding the secrets, push to `main` or manually run the workflow. The first run builds the
-frontend with live lookup disabled, deploys the Worker with live SVOA access disabled, and then
-publishes Pages. Copy the Worker URL from the deployment log. Add a GitHub repository **Actions
-variable** `NEXT_PUBLIC_PICKUP_WORKER_URL` with that URL ending in `/pickups`, then rerun the
-workflow so the frontend is rebuilt with the backend URL. The URL is public, not a secret.
+Before the first workflow run, deploy the Worker once with `npm run worker:deploy` (after
+`npx wrangler login`) or use the URL from an existing deployment. In GitHub **Settings → Secrets
+and variables → Actions → Variables**, add `NEXT_PUBLIC_PICKUP_WORKER_URL` with the Worker URL
+ending in `/pickups`. The URL is public, not a secret. The workflow requires this variable so
+it does not publish a frontend with its address input disabled.
 
-Without that variable, the frontend build succeeds but live lookup stays disabled. The current
-`SVOA_ACCESS_APPROVED` flag is `"false"`, so the Worker rejects live requests even after
-deployment. Only after written SVOA approval and the required reviews should you set the flag
-to `"true"` in [worker/wrangler.jsonc](../../worker/wrangler.jsonc) and push the change. The
-same workflow then deploys the approved Worker and frontend together.
+After adding the secrets and variable, push to `main` or manually run the workflow. It builds
+the frontend, deploys the Worker, publishes Pages, then smoke-tests the published page and the
+Worker's CORS preflight. The smoke test submits no address and does not call SVOA.
+
+The current `SVOA_ACCESS_APPROVED` flag is `"false"`, so the address form can be enabled while
+actual lookups are still rejected by the Worker. Only after written SVOA approval and the
+required reviews should you set the flag to `"true"` in
+[worker/wrangler.jsonc](../../worker/wrangler.jsonc) and push the change. The same workflow
+then deploys the approved Worker and frontend together.
 
 Set `ALLOWED_ORIGIN` to the exact frontend origin (currently `https://keyhad.github.io`).
 It is a Worker setting in [worker/wrangler.jsonc](../../worker/wrangler.jsonc), not a Pages

@@ -14,6 +14,7 @@
     "worker:dev": "wrangler dev --config worker/wrangler.jsonc",
     "worker:check": "wrangler deploy --dry-run --config worker/wrangler.jsonc",
     "worker:deploy": "wrangler deploy --config worker/wrangler.jsonc",
+    "smoke:deployment": "node scripts/smoke-deployment.mjs",
     "pretest": "npm run branding:sync",
     "test": "node --experimental-strip-types --test tests/*.test.mjs"
   },

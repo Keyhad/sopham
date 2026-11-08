@@ -51,6 +51,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Require the public Worker URL
+        env:
+          NEXT_PUBLIC_PICKUP_WORKER_URL: ${{ vars.NEXT_PUBLIC_PICKUP_WORKER_URL }}
+        run: |
+          if [ -z "$NEXT_PUBLIC_PICKUP_WORKER_URL" ]; then
+            echo "::error::Set the NEXT_PUBLIC_PICKUP_WORKER_URL Actions variable before deploying."
+            exit 1
+          fi
       - name: Build frontend
         run: npm run build
         env:
@@ -66,3 +74,9 @@ jobs:
           path: out
       - uses: actions/deploy-pages@v4
         id: deployment
+      - name: Smoke test deployed Pages and Worker
+        run: npm run smoke:deployment
+        env:
+          SMOKE_PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          NEXT_PUBLIC_PICKUP_WORKER_URL: ${{ vars.NEXT_PUBLIC_PICKUP_WORKER_URL }}
+          SMOKE_ALLOWED_ORIGIN: https://keyhad.github.io
