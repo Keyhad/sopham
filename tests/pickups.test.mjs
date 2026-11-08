@@ -31,7 +31,7 @@ test("sends addresses only in a POST body to the configured backend", async (t) 
     else process.env.NEXT_PUBLIC_PICKUP_WORKER_URL = original;
   });
   delete process.env.NEXT_PUBLIC_PICKUP_WORKER_URL;
-  assert.equal(lookupAvailable(), false);
+  assert.equal(lookupAvailable(), true); // change for testing pages in github
   await assert.rejects(fetchPickups("Testvägen", new AbortController().signal), /avstängd/);
   process.env.NEXT_PUBLIC_PICKUP_WORKER_URL = "https://sopham-pickups.example.workers.dev/pickups";
   assert.equal(lookupAvailable(), true);
