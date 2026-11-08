@@ -9,5 +9,5 @@
   "logo": "logos/wordmark.svg",
   "favicon": "icons/favicon.svg",
   "illustration": "layout/hero.svg",
-  "icons": ["recycle", "sun", "spark", "heart", "arrow-up-right", "arrow-right", "download", "food", "package", "battery", "paper", "plastic", "glass", "metal", "waste"]
+  "icons": ["recycle", "sun", "spark", "heart", "arrow-up-right", "arrow-right", "download", "food", "package", "battery", "paper", "plastic", "glass", "metal", "waste", "glass-colored", "glass-clear"]
 }

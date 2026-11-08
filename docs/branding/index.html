@@ -31,7 +31,18 @@
 
     <section id="icons" class="section">
       <h2>Ikoner</h2>
-      <p>Gemensam SVG-sprite. Symboler är dekorativa när text redan förklarar funktionen. Emoji kan se olika ut mellan operativsystem.</p>
+      <p>Gemensam SVG-sprite. Avfallssymbolerna är egna vektorpiktogram på färgade rutor: soppåse, äppelskrutt, kartong, plastpåse/flaska, glasflaskor och konservburk. Färgerna är visuellt anpassade efter sorteringsreferensen, inte en kalibrerad tryckpalett. Symboler är dekorativa när text redan förklarar funktionen.</p>
+      <h3>Avfallssortering</h3>
+      <div class="catalog-grid">
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Restavfall"><use href="icons/sprite.svg#waste"></use></svg><figcaption>Restavfall · waste</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Matavfall"><use href="icons/sprite.svg#food"></use></svg><figcaption>Matavfall · food</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Pappersförpackningar"><use href="icons/sprite.svg#paper"></use></svg><figcaption>Pappersförpackningar · paper</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Plastförpackningar"><use href="icons/sprite.svg#plastic"></use></svg><figcaption>Plastförpackningar · plastic</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Färgade glasförpackningar"><use href="icons/sprite.svg#glass-colored"></use></svg><figcaption>Färgade glasförpackningar · glass-colored</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Ofärgade glasförpackningar"><use href="icons/sprite.svg#glass-clear"></use></svg><figcaption>Ofärgade glasförpackningar · glass-clear</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Metallförpackningar"><use href="icons/sprite.svg#metal"></use></svg><figcaption>Metallförpackningar · metal</figcaption></figure>
+      </div>
+      <h3 class="section">Övriga symboler</h3>
       <div class="catalog-grid">
         <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Återvinning"><use href="icons/sprite.svg#recycle"></use></svg><figcaption>recycle</figcaption></figure>
         <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Sol"><use href="icons/sprite.svg#sun"></use></svg><figcaption>sun</figcaption></figure>
@@ -40,17 +51,12 @@
         <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Extern länk"><use href="icons/sprite.svg#arrow-up-right"></use></svg><figcaption>arrow-up-right</figcaption></figure>
         <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Nästa"><use href="icons/sprite.svg#arrow-right"></use></svg><figcaption>arrow-right</figcaption></figure>
         <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Ladda ned"><use href="icons/sprite.svg#download"></use></svg><figcaption>download</figcaption></figure>
-        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Matavfall"><use href="icons/sprite.svg#food"></use></svg><figcaption>food</figcaption></figure>
         <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Förpackningar"><use href="icons/sprite.svg#package"></use></svg><figcaption>package</figcaption></figure>
         <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Batterier"><use href="icons/sprite.svg#battery"></use></svg><figcaption>battery</figcaption></figure>
-        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Papper"><use href="icons/sprite.svg#paper"></use></svg><figcaption>paper</figcaption></figure>
-        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Plastflaska"><use href="icons/sprite.svg#plastic"></use></svg><figcaption>plastic</figcaption></figure>
-        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Glasflaska"><use href="icons/sprite.svg#glass"></use></svg><figcaption>glass</figcaption></figure>
-        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Metallburk"><use href="icons/sprite.svg#metal"></use></svg><figcaption>metal</figcaption></figure>
-        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Restavfallskärl"><use href="icons/sprite.svg#waste"></use></svg><figcaption>waste</figcaption></figure>
+        <figure class="card"><svg class="asset-preview icon-preview" viewBox="0 0 64 64" role="img" aria-label="Glas, typ ej angiven"><use href="icons/sprite.svg#glass"></use></svg><figcaption>Glas, typ ej angiven · glass</figcaption></figure>
       </div>
       <p class="sorting-link"><a href="icons/sprite.svg">icons/sprite.svg</a></p>
-      <p><a href="icons/materials.json">Materialnamn och matchningsord</a> används för att koppla datakällans kärlgrupper till tydliga symboler. Okända grupper visas med sitt ursprungliga namn.</p>
+      <p><a href="icons/materials.json">Materialnamn, färgkopplingar, sorteringstips och matchningsord</a> kopplar datakällans kärlgrupper till tydliga symboler. Om datakällan bara anger glas används en gemensam glasikon, utan att gissa glastyp. Okända grupper visas med sitt ursprungliga namn.</p>
     </section>
 
     <section id="colors" class="section">
@@ -89,6 +95,13 @@
         <figure class="card" data-color="--sorting-food"><span class="swatch" style="--swatch: var(--sorting-food)"></span><figcaption class="token-name">--sorting-food</figcaption></figure>
         <figure class="card" data-color="--sorting-packaging"><span class="swatch" style="--swatch: var(--sorting-packaging)"></span><figcaption class="token-name">--sorting-packaging</figcaption></figure>
         <figure class="card" data-color="--sorting-hazardous"><span class="swatch" style="--swatch: var(--sorting-hazardous)"></span><figcaption class="token-name">--sorting-hazardous</figcaption></figure>
+        <figure class="card" data-color="--waste-residual"><span class="swatch" style="--swatch: var(--waste-residual)"></span><figcaption class="token-name">--waste-residual</figcaption></figure>
+        <figure class="card" data-color="--waste-food"><span class="swatch" style="--swatch: var(--waste-food)"></span><figcaption class="token-name">--waste-food</figcaption></figure>
+        <figure class="card" data-color="--waste-paper"><span class="swatch" style="--swatch: var(--waste-paper)"></span><figcaption class="token-name">--waste-paper</figcaption></figure>
+        <figure class="card" data-color="--waste-plastic"><span class="swatch" style="--swatch: var(--waste-plastic)"></span><figcaption class="token-name">--waste-plastic</figcaption></figure>
+        <figure class="card" data-color="--waste-glass"><span class="swatch" style="--swatch: var(--waste-glass)"></span><figcaption class="token-name">--waste-glass</figcaption></figure>
+        <figure class="card" data-color="--waste-metal"><span class="swatch" style="--swatch: var(--waste-metal)"></span><figcaption class="token-name">--waste-metal</figcaption></figure>
+        <figure class="card" data-color="--waste-symbol"><span class="swatch" style="--swatch: var(--waste-symbol)"></span><figcaption class="token-name">--waste-symbol</figcaption></figure>
       </div>
     </section>
 
@@ -111,7 +124,7 @@
         </article>
         <article class="card results"><h3>Illustration och resultatkort</h3><svg class="illustration" viewBox="0 0 480 350" role="img" aria-label="Två avfallskärl redo för hämtning"><use href="layout/hero.svg#hero"></use></svg><div class="tip"><strong>Vänlig, praktisk och tydlig.</strong><p>Illustrationen använder samma färgvariabler som gränssnittet.</p></div></article>
       </div>
-      <div class="sorting-grid section"><article class="sort-card"><h3>Matavfall</h3><p>Grön yta.</p></article><article class="sort-card"><h3>Förpackningar</h3><p>Varm yta.</p></article><article class="sort-card"><h3>Särskild insamling</h3><p>Kall yta.</p></article></div>
+      <div class="sorting-grid section"><article class="sort-card"><svg class="icon" viewBox="0 0 64 64" aria-hidden="true"><use href="icons/sprite.svg#food"></use></svg><h3>Matavfall</h3><p>Vit symbol på grön ruta, med tydlig textetikett.</p></article><article class="sort-card"><svg class="icon" viewBox="0 0 64 64" aria-hidden="true"><use href="icons/sprite.svg#plastic"></use></svg><h3>Plastförpackningar</h3><p>Vit symbol på magentafärgad ruta.</p></article><article class="sort-card sort-card-hazardous"><h3>Särskild insamling</h3><p>Farligt avfall hålls utanför vanliga avfallskategorier.</p></article></div>
     </section>
   </main>
 </body>

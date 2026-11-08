@@ -46,18 +46,15 @@ p { margin: 0 0 16px; }
 .pickup-date { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
 .material-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 16px; max-width: 780px; }
 .material-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 20px 12px; border-radius: var(--card-radius); background: var(--surface); border: 1px solid var(--line); min-width: 0; text-align: center; }
-.material-card .icon { width: var(--material-icon-size); height: var(--material-icon-size); color: var(--green); }
-.material-card strong { font-size: 24px; overflow-wrap: anywhere; }
-.material-glass, .material-metal { background: var(--sorting-hazardous); }
-.material-paper, .material-plastic, .material-package { background: var(--sorting-packaging); }
-.material-food, .material-waste { background: var(--sorting-food); }
+.material-card .icon { width: var(--material-icon-size); height: var(--material-icon-size); }
+.material-card strong { font-size: 24px; line-height: 1.3; overflow-wrap: anywhere; hyphens: auto; }
 .pickup-instruction { font-size: 22px; font-weight: 700; margin-top: 20px; }
 .overview-status, .overview-address, .overview-checked { font-size: 16px; margin-bottom: 10px; overflow-wrap: anywhere; }
 .overview-checked { color: var(--muted); }
 .overview-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
 .refresh-warning { border: 2px solid var(--focus); background: var(--label-background); border-radius: var(--control-radius); padding: 14px; margin-bottom: 16px; font-size: 16px; }
 .refresh-warning p { margin: 6px 0 0; }
-.pickup-icon { display: flex; flex-wrap: wrap; gap: 4px; max-width: 90px; }
+.pickup-icon { display: flex; flex-wrap: wrap; gap: 6px; max-width: 84px; flex-shrink: 0; }
 .hero h2 { font-size: var(--heading-size); line-height: var(--heading-line-height); letter-spacing: var(--heading-tracking); }
 .hero h2 span { color: var(--green); }
 .card .small, .small { font-size: 12px; color: var(--muted); }
@@ -80,7 +77,7 @@ input[type=checkbox] { flex: 0 0 20px; width: 20px; height: 20px; accent-color: 
 .pickup-list strong { display: block; font-size: 19px; }
 .pickup-list p { margin: 4px 0; }
 .pickup-list small { color: var(--muted); }
-.pickup-icon { font-size: 26px; background: var(--tag-background); border-radius: var(--control-radius); padding: 5px 10px; }
+.pickup-icon { font-size: 36px; }
 .tip { padding: 16px; background: var(--tip-background); border-radius: var(--control-radius); margin-bottom: 20px; }
 .tip p { margin: 6px 0 0; }
 .results > button { width: 100%; margin-bottom: 12px; }
@@ -88,9 +85,10 @@ details { border-top: 1px solid var(--line); padding: 18px 0; }
 summary { font-weight: 700; cursor: pointer; min-height: 30px; }
 details p:first-of-type { margin-top: 14px; }
 .sorting-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.sort-card { border-radius: 18px; padding: 26px; background: var(--sorting-food); }
-.sort-card:nth-child(2) { background: var(--sorting-packaging); }.sort-card:nth-child(3) { background: var(--sorting-hazardous); }
-.sort-card > .icon { font-size: 32px; display: block; margin-bottom: 16px; }
+.sort-card { border: 1px solid var(--line); border-radius: 18px; padding: 26px; background: var(--surface); }
+.sort-card-hazardous { background: var(--sorting-hazardous); }
+.sort-card > .icon { font-size: 64px; display: block; margin-bottom: 16px; }
+.sort-card h3 { overflow-wrap: anywhere; hyphens: auto; }
 .sort-card p { font-size: 14px; margin: 0; }
 .sorting-link { font-size: 14px; margin-top: 24px; }
 .legal { max-width: 800px; padding-bottom: 65px; }

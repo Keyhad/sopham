@@ -1,7 +1,8 @@
 import brand from "@/docs/branding/brand.json";
 import { brandingAsset } from "@/lib/branding";
+import type { MaterialId } from "@/lib/pickup-display";
 
-type IconName = "recycle" | "sun" | "spark" | "heart" | "arrow-up-right" | "arrow-right" | "download" | "food" | "package" | "battery" | "paper" | "plastic" | "glass" | "metal" | "waste";
+type IconName = MaterialId | "recycle" | "sun" | "spark" | "heart" | "arrow-up-right" | "arrow-right" | "download" | "battery";
 
 export function BrandIcon({ name }: { name: IconName }) {
   return <svg className="icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><use href={brandingAsset(`icons/sprite.svg#${name}`)} /></svg>;

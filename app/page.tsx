@@ -9,7 +9,7 @@ import { fetchAddresses, type AddressSuggestion } from "@/lib/addresses";
 import { locationErrorMessage } from "@/lib/location";
 import { DEMO_FILENAME, DEMO_SOURCE, demoPickups } from "@/lib/demo";
 import { forgetRemembered, readRemembered, saveRemembered, REMEMBERED_KEY } from "@/lib/remembered";
-import { pickupMaterials } from "@/lib/pickup-display";
+import { pickupMaterials, sortingMaterials } from "@/lib/pickup-display";
 import { PickupOverview } from "./pickup-overview";
 
 const backendProvider = process.env.NEXT_PUBLIC_PICKUP_BACKEND_PROVIDER || "Cloudflare";
@@ -478,7 +478,7 @@ export default function Home() {
                 <p className="small">Enstaka heldagshändelser med påminnelse kvällen före, om din kalender stöder det. Importera filen i din kalender. Inga framtida datum beräknas och kalendern uppdateras inte automatiskt.</p>
               </> : <div className="empty"><BrandIcon name="sun" /><p>{pickups.length ? "Datakällans datum har redan passerat. Kontrollera ett nytt datum hos SVOA." : "Här landar din nästa hämtningsdag."}</p></div>}
               <details><summary>Lägg in ett eget, kontrollerat datum</summary><p>Om direktsökningen inte fungerar: kontrollera datumet hos SVOA först. Ett eget datum ersätter tidigare resultat och märks som ej verifierat.</p>
-                <form onSubmit={addManual}><label htmlFor="bin">Kärl / avfall</label><select id="bin" value={bin} onChange={(event) => setBin(event.target.value)}><option>Restavfall och matavfall</option><option>Restavfall</option><option>Matavfall</option><option>Förpackningar</option></select><label htmlFor="date">Nästa hämtningsdatum</label><input id="date" type="date" value={date} min={stockholmToday()} max="9999-12-31" onChange={(event) => setDate(event.target.value)} required /><button className="secondary" type="submit">Använd mitt datum</button></form>
+                <form onSubmit={addManual}><label htmlFor="bin">Kärl / avfall</label><select id="bin" value={bin} onChange={(event) => setBin(event.target.value)}><option>Restavfall och matavfall</option>{sortingMaterials.map(material => <option key={material.icon}>{material.title}</option>)}<option>Förpackningar</option></select><label htmlFor="date">Nästa hämtningsdatum</label><input id="date" type="date" value={date} min={stockholmToday()} max="9999-12-31" onChange={(event) => setDate(event.target.value)} required /><button className="secondary" type="submit">Använd mitt datum</button></form>
               </details>
             </div>
           </div>
@@ -487,9 +487,8 @@ export default function Home() {
         <section id="sortera" className="section">
           <div className="section-heading"><p className="eyebrow">SMÅ VANOR, STOR SKILLNAD</p><h2>Var sak på sin plats.</h2><p>Några enkla tips inför nästa runda. Följ alltid aktuella lokala anvisningar.</p></div>
           <div className="sorting-grid">
-            <article className="sort-card"><BrandIcon name="food" /><h3>Matavfall</h3><p>Matrester, skal och kaffesump. Använd den matavfallspåse som din avfallsleverantör anvisar, inte en plastpåse.</p></article>
-            <article className="sort-card"><BrandIcon name="package" /><h3>Förpackningar</h3><p>Sortera tomma förpackningar efter material. Lämna dem i rätt insamling för din fastighet eller på en återvinningsstation.</p></article>
-            <article className="sort-card"><BrandIcon name="battery" /><h3>Inte i soppåsen!</h3><p>Batterier, elavfall och farligt avfall ska lämnas till särskild insamling, aldrig i restavfall eller matavfall.</p></article>
+            {sortingMaterials.map(material => <article className="sort-card" key={material.icon}><BrandIcon name={material.icon} /><h3>{material.title}</h3><p>{material.tip}</p></article>)}
+            <article className="sort-card sort-card-hazardous"><BrandIcon name="battery" /><h3>Inte i soppåsen!</h3><p>Batterier, elavfall och farligt avfall ska lämnas till särskild insamling, aldrig i restavfall eller matavfall.</p></article>
           </div>
           <p className="sorting-link">Osäker? Besök <a href="https://www.stockholmvattenochavfall.se/" target="_blank" rel="noreferrer">SVOA:s sorteringsguide och information om återvinningsplatser <BrandIcon name="arrow-up-right" /></a>.</p>
         </section>

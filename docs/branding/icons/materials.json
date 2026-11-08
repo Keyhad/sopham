@@ -1,9 +1,11 @@
 {
-  "paper": { "label": "Papper", "terms": ["papper", "kartong"] },
-  "plastic": { "label": "Plast", "terms": ["plast"] },
-  "glass": { "label": "Glas", "terms": ["glas", "flask"] },
-  "metal": { "label": "Metall", "terms": ["metall", "burk"] },
-  "waste": { "label": "Restavfall", "terms": ["restavfall", "brännbart"] },
-  "food": { "label": "Matavfall", "terms": ["matavfall", "organiskt"] },
-  "package": { "label": "Förpackningar", "terms": ["förpackning"] }
+  "paper": { "label": "Papper", "title": "Pappersförpackningar", "color": "--waste-paper", "tip": "Töm och platta till kartonger och andra pappersförpackningar.", "terms": ["papper", "kartong"] },
+  "plastic": { "label": "Plast", "title": "Plastförpackningar", "color": "--waste-plastic", "tip": "Sortera tomma förpackningar av hårdplast och mjukplast tillsammans.", "terms": ["plast"] },
+  "glass": { "label": "Glas", "title": "Glasförpackningar", "color": "--waste-glass", "tip": "Håll färgade och ofärgade glasförpackningar åtskilda enligt din lokala insamling.", "terms": ["glas", "flask"] },
+  "glass-colored": { "label": "Färgat glas", "title": "Färgade glasförpackningar", "color": "--waste-glass", "tip": "Sortera tomma färgade glasflaskor och glasburkar separat från ofärgat glas.", "terms": ["färgat", "färgade", "grönt glas", "brunt glas"] },
+  "glass-clear": { "label": "Ofärgat glas", "title": "Ofärgade glasförpackningar", "color": "--waste-glass", "tip": "Sortera tomma genomskinliga glasflaskor och glasburkar separat från färgat glas.", "terms": ["ofärgat", "ofärgade", "klart glas", "vitt glas", "transparent glas"] },
+  "metal": { "label": "Metall", "title": "Metallförpackningar", "color": "--waste-metal", "tip": "Töm metallförpackningar och sortera även metallock och kapsyler här.", "terms": ["metall", "burk"] },
+  "waste": { "label": "Restavfall", "title": "Restavfall", "color": "--waste-residual", "tip": "Det som inte kan sorteras för återvinning läggs i en väl försluten soppåse.", "terms": ["restavfall", "brännbart"] },
+  "food": { "label": "Matavfall", "title": "Matavfall", "color": "--waste-food", "tip": "Lägg matrester, skal och kaffesump i den matavfallspåse som din avfallsleverantör anvisar.", "terms": ["matavfall", "organiskt"] },
+  "package": { "label": "Förpackningar", "title": "Förpackningar", "color": "--waste-paper", "tip": "Sortera tomma förpackningar efter material och följ din lokala insamling.", "terms": ["förpackning"] }
 }

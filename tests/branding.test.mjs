@@ -30,12 +30,37 @@ test("synced SVG assets resolve colors from the single palette source", async ()
         assert.ok(colors.has(token), `Unknown color ${token}`);
         return colors.get(token);
       });
+
       assert.equal(published, expected);
       assert.ok(!published.includes("var("));
     }
   }
   assert.equal(await read("public/branding/index.html"), await read("docs/branding/index.html"));
   assert.equal(await read("public/design-spec.md"), await read("docs/design-spec.md"));
+});
+
+test("waste pictograms use their shared category colors with at least 3:1 symbol contrast", async () => {
+  const [palette, sprite, definitions] = await Promise.all([
+    read("docs/branding/colors/tokens.css"), read("docs/branding/icons/sprite.svg"), read("docs/branding/icons/materials.json"),
+  ]);
+  const colors = new Map([...palette.matchAll(/(--[\w-]+):\s*(#[\da-f]{6});/gi)].map(match => [match[1], match[2]]));
+  const luminance = hex => {
+    const linear = hex.slice(1).match(/../g).map(channel => {
+      const value = parseInt(channel, 16) / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
+  };
+  for (const [icon, material] of Object.entries(JSON.parse(definitions))) {
+    const symbol = sprite.match(new RegExp(`<symbol id="${icon}"[^>]*>([\\s\\S]*?)</symbol>`))?.[1];
+    assert.ok(symbol, icon);
+    assert.ok(symbol.includes(`fill="var(${material.color})"`), icon);
+    assert.ok(symbol.includes("var(--waste-symbol)"), icon);
+    assert.ok(!symbol.includes("<text"), `${icon} must not depend on emoji rendering`);
+    const foreground = luminance(colors.get("--waste-symbol"));
+    const background = luminance(colors.get(material.color));
+    assert.ok((Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05) >= 3, `${icon} contrast`);
+  }
 });
 
 test("catalog relative asset and documentation links resolve in the published tree", async () => {

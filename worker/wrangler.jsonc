@@ -6,7 +6,7 @@
   "workers_dev": true,
   "vars": {
     "ALLOWED_ORIGIN": "https://keyhad.github.io",
-    "SVOA_ACCESS_APPROVED": "false"
+    "SVOA_ACCESS_APPROVED": "true"
   },
   "ratelimits": [
     {

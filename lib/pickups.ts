@@ -10,7 +10,7 @@ export type Pickup = {
 };
 
 export function lookupAvailable(): boolean {
-  return true || Boolean(process.env.NEXT_PUBLIC_PICKUP_WORKER_URL);
+  return Boolean(process.env.NEXT_PUBLIC_PICKUP_WORKER_URL);
 }
 
 export function validDate(value: string): boolean {

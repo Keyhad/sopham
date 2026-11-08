@@ -22,6 +22,8 @@ Publicera innehållet i `out/` på ett statiskt webbhotell över HTTPS (krävs f
 
 Appen använder dessa källor direkt för CSS och metadata. `npm run dev`, `npm test` och `npm run build` synkroniserar katalog och SVG-tillgångar till genererade, git-ignorerade filer i `public/`. Öppna `http://localhost:3000/branding/index.html` under utveckling. Efter ändringar i SVG eller katalog under en redan startad server: kör `npm run branding:sync` och ladda om. Ändra alltid källorna i `docs/branding/`, inte kopiorna i `public/`.
 
+Avfallskategorier använder textmärkta, vita SVG-piktogram på färgade rutor: restavfall svart, matavfall grönt, pappersförpackningar ockra, plastförpackningar magenta, glas grönt och metall grått. Konturflaska skiljer färgat glas från ofärgat glas med fylld flaska. Namn, sorteringstips och matchningsord finns i [materials.json](docs/branding/icons/materials.json), färger i [paletten](docs/branding/colors/tokens.css). Samma symboler används i nästa hämtning, resultatlistan, sorteringsguiden och brandingkatalogen.
+
 ## Automatisk publicering med GitHub Pages
 
 [Pages-workflow](.github/workflows/pages.yml) kör lint, tester och statiskt bygge för pull requests och push till `main`. Push till `main` och manuell körning på `main` publicerar `out/` via GitHub Pages. Pull requests publiceras inte.

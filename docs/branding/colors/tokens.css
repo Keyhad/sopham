@@ -31,4 +31,11 @@
   --sorting-food: #ecefdf;
   --sorting-packaging: #f3eadc;
   --sorting-hazardous: #e6eeec;
+  --waste-residual: #333333;
+  --waste-food: #55853f;
+  --waste-paper: #a9792e;
+  --waste-plastic: #9a3d73;
+  --waste-glass: #367a65;
+  --waste-metal: #696c6e;
+  --waste-symbol: #ffffff;
 }
