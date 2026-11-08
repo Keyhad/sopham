@@ -88,15 +88,22 @@ and variables → Actions → Variables**, add `NEXT_PUBLIC_PICKUP_WORKER_URL` w
 ending in `/pickups`. The URL is public, not a secret. The workflow requires this variable so
 it does not publish a frontend with its address input disabled.
 
+The Worker approval gate is controlled separately through the `github-pages` environment.
+Open **Settings → Environments → github-pages → Environment variables** and optionally add
+`SVOA_ACCESS_APPROVED` with the value `false`. If it is absent, the workflow defaults it to
+`false`. Configure a required reviewer under the environment's deployment protection rules if
+you want every publish workflow run to require approval; the same job deploys both Worker and
+Pages. Do not set it to `true` before written SVOA approval and the required reviews.
+
 After adding the secrets and variable, push to `main` or manually run the workflow. It builds
 the frontend, deploys the Worker, publishes Pages, then smoke-tests the published page and the
 Worker's CORS preflight. The smoke test submits no address and does not call SVOA.
 
-The current `SVOA_ACCESS_APPROVED` flag is `"false"`, so the address form can be enabled while
-actual lookups are still rejected by the Worker. Only after written SVOA approval and the
-required reviews should you set the flag to `"true"` in
-[worker/wrangler.jsonc](../../worker/wrangler.jsonc) and push the change. The same workflow
-then deploys the approved Worker and frontend together.
+The [worker/wrangler.jsonc](../../worker/wrangler.jsonc) value remains `"false"` as the
+fail-safe for local/manual deployments. The publish workflow overrides it with the
+`github-pages` environment variable, defaulting to `"false"`. After written SVOA approval and
+the required reviews, set that environment variable to `"true"` and run the workflow to deploy
+the approved Worker and frontend together.
 
 Set `ALLOWED_ORIGIN` to the exact frontend origin (currently `https://keyhad.github.io`).
 It is a Worker setting in [worker/wrangler.jsonc](../../worker/wrangler.jsonc), not a Pages
